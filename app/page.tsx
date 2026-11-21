@@ -2,277 +2,346 @@ import Image from "next/image";
 import Nav from "@/components/Nav";
 import Reveal from "@/components/Reveal";
 import Section from "@/components/Section";
-import SceneLoader from "@/components/three/SceneLoader";
+import Hero from "@/components/hero/Hero";
 import BasketballLoader from "@/components/fx/BasketballLoader";
-import PageChrome from "@/components/fx/PageChrome";
-import SplitText from "@/components/fx/SplitText";
+import CustomCursor from "@/components/fx/CustomCursor";
+import ScrollBall from "@/components/fx/ScrollBall";
+import ScrollMarquee from "@/components/fx/ScrollMarquee";
+import Odometer from "@/components/fx/Odometer";
+import Mark from "@/components/fx/Mark";
+import Playground from "@/components/fx/Playground";
+import ExperienceReel from "@/components/fx/ExperienceReel";
+import Stamp from "@/components/fx/Stamp";
+import RollLink from "@/components/fx/RollLink";
+import DelhiClock from "@/components/fx/DelhiClock";
+import MobileDock from "@/components/fx/MobileDock";
+import WhatsAppIcon from "@/components/fx/WhatsAppIcon";
 import Magnetic from "@/components/fx/Magnetic";
-import Marquee from "@/components/fx/Marquee";
-import Counter from "@/components/fx/Counter";
-import TiltCard from "@/components/fx/TiltCard";
-import Timeline from "@/components/fx/Timeline";
 import {
   profile,
   marquee,
   stats,
   ventures,
   experience,
-  achievements,
-  skills,
+  stamps,
+  toolkit,
+  tags,
   education,
+  whatsappLink,
 } from "@/lib/data";
 
-const LOADER_MS = 2300;
+const CARD_TONES = [
+  { bg: "bg-sun text-ink", chip: "bg-ink text-ivory" },
+  { bg: "bg-sky text-ink", chip: "bg-ink text-ivory" },
+  { bg: "bg-teal text-ivory", chip: "bg-ivory text-ink" },
+];
+
+const TILE_TONES = ["bg-sun", "bg-sky", "bg-teal text-ivory", "bg-paper"];
+
+function Badge({ text }: { text: string }) {
+  const label = `${text} · ${text} · `;
+  return (
+    <div className="relative h-36 w-36 shrink-0">
+      <svg viewBox="0 0 120 120" className="spin-slow absolute inset-0 h-full w-full" aria-hidden>
+        <defs>
+          <path id={`c-${text}`} d="M60,60 m-47,0 a47,47 0 1,1 94,0 a47,47 0 1,1 -94,0" />
+        </defs>
+        <text className="fill-current font-mono text-[10.5px] font-bold uppercase tracking-[0.22em]">
+          <textPath href={`#c-${text}`}>{label.toUpperCase()}</textPath>
+        </text>
+      </svg>
+      <div className="absolute inset-0 m-auto flex h-16 w-16 items-center justify-center rounded-full border-2 border-current font-display text-xs font-extrabold uppercase">
+        Now
+      </div>
+    </div>
+  );
+}
+
 
 export default function Home() {
   return (
     <>
       <BasketballLoader />
-      <SceneLoader />
-      <PageChrome />
+      <CustomCursor />
+      <ScrollBall />
       <Nav />
-      <main id="top" className="relative z-10">
-        {/* Hero */}
-        <section className="relative mx-auto grid min-h-screen max-w-6xl items-center gap-12 px-5 pb-20 pt-28 md:grid-cols-[1.2fr_1fr]">
-          <div>
-            <p className="mb-4 font-mono text-xs uppercase tracking-[0.2em] text-accent">
-              Hello, I&apos;m
-            </p>
-            <SplitText
-              text={profile.name}
-              delay={LOADER_MS / 1000 + 0.1}
-              className="text-5xl font-semibold tracking-tight sm:text-7xl"
+      <MobileDock whatsapp={whatsappLink} email={profile.email} />
+
+      <main id="top">
+        <Hero />
+
+        {/* Scroll-reactive tape */}
+        <div className="relative my-6 h-44 sm:h-60">
+          <div className="absolute inset-x-[-5%] top-0 -rotate-[2.5deg] border-y-2 border-ink bg-sun py-3">
+            <ScrollMarquee items={marquee} />
+          </div>
+          <div className="absolute inset-x-[-5%] top-14 rotate-[2deg] border-y-2 border-ink bg-ink py-3 text-ivory sm:top-20">
+            <ScrollMarquee
+              direction={-1}
+              outline
+              items={["Question papers", "Scripts", "Slides", "Notes", "Worksheets", "Solutions"]}
             />
-            <Reveal delay={LOADER_MS / 1000 + 0.6}>
-              <p className="gradient-text mt-4 text-xl font-medium sm:text-2xl">
-                Managing Director, AxiomPrep
-              </p>
-              <p className="mt-1 text-lg text-muted">Academic Content Head, Examlytics</p>
-              <p className="mt-6 max-w-xl leading-relaxed text-muted">
-                I co-founded and lead{" "}
-                <span className="text-foreground">AxiomPrep</span> by Examlytics Group of
-                Companies, building science prep for NEET and IIT-JEE aspirants from first
-                principles.
-              </p>
-              <div className="mt-8 flex flex-wrap gap-4">
-                <Magnetic>
-                  <a
-                    href="#contact"
-                    className="inline-block rounded-full bg-accent px-7 py-3 text-sm font-semibold text-background shadow-[0_0_30px_-4px_rgba(247,147,30,0.6)] transition hover:brightness-110"
-                  >
-                    Get in touch
-                  </a>
-                </Magnetic>
-                <Magnetic>
-                  <a
-                    href="#experience"
-                    className="inline-block rounded-full border border-border bg-surface/50 px-7 py-3 text-sm font-medium backdrop-blur transition hover:border-accent-2"
-                  >
-                    View experience
-                  </a>
-                </Magnetic>
-              </div>
-            </Reveal>
-          </div>
-
-          {/* The 3D atom tracks this element (#hero-anchor) */}
-          <div id="hero-anchor" className="mx-auto w-56 sm:w-72 md:w-full md:max-w-[17rem]">
-            <div className="rounded-[2rem] bg-gradient-to-br from-accent via-accent-deep to-accent-2 p-1 shadow-[0_0_80px_-10px_rgba(42,172,226,0.5)]">
-              <Image
-                src="/tanishq.jpg"
-                alt="Portrait of Tanishq Kansal"
-                width={960}
-                height={1280}
-                priority
-                className="aspect-[4/5] w-full rounded-[1.85rem] object-cover object-top"
-              />
-            </div>
-          </div>
-        </section>
-
-        <Marquee items={marquee} />
-
-        {/* Stats */}
-        <div className="mx-auto mt-10 max-w-6xl px-5">
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-            {stats.map((s, i) => (
-              <Reveal key={s.label} delay={i * 0.1}>
-                <TiltCard className="h-full rounded-2xl border border-border bg-surface/70 p-6 backdrop-blur-sm">
-                  <div className="gradient-text text-3xl font-semibold sm:text-4xl">
-                    <Counter value={s.value} suffix={s.suffix} />
-                  </div>
-                  <div className="mt-1 text-sm text-muted">{s.label}</div>
-                </TiltCard>
-              </Reveal>
-            ))}
           </div>
         </div>
 
-        {/* About */}
-        <Section id="about" eyebrow="About" title="Building scalable learning solutions">
-          <Reveal className="grid items-center gap-10 md:grid-cols-[auto_1fr]">
-            <Image
-              src="/tanishq-circle.jpg"
-              alt="Tanishq Kansal"
-              width={240}
-              height={240}
-              className="mx-auto h-48 w-48 rounded-full ring-2 ring-accent/60 ring-offset-4 ring-offset-background"
-            />
-            <div className="space-y-4 leading-relaxed text-muted">
-              <p>{profile.summary}</p>
-              <p>
-                I&apos;ve designed 25 NEET-oriented question paper sets with 4,500 questions, and
-                contributed to educational content, scripts, presentations and academic projects
-                across multiple EdTech initiatives. I turn complex science into clear,
-                student-friendly material.
-              </p>
+        {/* Scoreboard */}
+        <section className="mx-auto mt-16 max-w-6xl px-5">
+          <Reveal>
+            <div className="hard-lg relative overflow-hidden rounded-3xl bg-ink p-6 text-ivory sm:p-10">
+              <div className="mb-8 flex items-center justify-between font-mono text-xs uppercase tracking-[0.25em]">
+                <span>Scoreboard</span>
+                <span className="flex items-center gap-2">
+                  <span className="blink h-2 w-2 rounded-full bg-ember" /> Live
+                </span>
+              </div>
+              <div className="grid grid-cols-2 gap-x-10 gap-y-10 md:grid-cols-4">
+                {stats.map((s) => (
+                  <div key={s.label}>
+                    <div className="font-display text-5xl font-extrabold text-sun sm:text-5xl lg:text-6xl">
+                      <Odometer value={s.value} suffix={s.suffix} />
+                    </div>
+                    <p className="mt-3 font-mono text-xs uppercase tracking-wider text-ivory/70">{s.label}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Reveal>
+        </section>
+
+        {/* About: notebook page */}
+        <Section id="about" num="01" title="About">
+          <Reveal>
+            <div className="relative mx-auto max-w-4xl">
+              <div className="hard-lg ruled relative rounded-xl bg-paper py-10 pl-16 pr-6 sm:pl-24 sm:pr-14">
+                <span className="absolute inset-y-0 left-12 w-0.5 bg-ember/50 sm:left-20" />
+                <div className="absolute inset-y-6 left-3 flex flex-col justify-between sm:left-6">
+                  {Array.from({ length: 6 }).map((_, i) => (
+                    <span key={i} className="h-4 w-4 rounded-full border-2 border-ink bg-ivory" />
+                  ))}
+                </div>
+
+                <div className="space-y-8 text-lg leading-8 sm:text-xl">
+                  <p>
+                    Hi, I&apos;m Tanishq. I&apos;m from Delhi, and I spend my days turning hard science into
+                    something a NEET or IIT-JEE student can actually follow.
+                  </p>
+                  <p>
+                    Right now I&apos;m <Mark>Managing Director at AxiomPrep</Mark>, which I co-founded, and{" "}
+                    <Mark>Academic Content Head at Examlytics</Mark>. I look after the content team, the tech
+                    team and the mentors, and I work closely with our Founder &amp; CEO and CTO.
+                  </p>
+                  <p>
+                    Before that I wrote papers, scripts and slides for a lot of other EdTech teams. In two
+                    months of 2025 I built 25 NEET test papers with 180 questions each. That&apos;s{" "}
+                    <Mark>4,500 questions</Mark>.
+                  </p>
+                  <p>I&apos;m also studying BMLS (Medical Laboratory Science) at DPSRU.</p>
+                </div>
+
+                <Image
+                  src="/tanishq-circle.jpg"
+                  alt=""
+                  width={160}
+                  height={160}
+                  className="hard absolute -right-4 -top-8 h-24 w-24 rotate-6 rounded-full bg-paper sm:-right-8 sm:h-32 sm:w-32"
+                />
+                <p className="absolute -bottom-10 right-4 hidden rotate-[-4deg] font-hand text-3xl text-ember md:block">
+                  25 papers x 180 = 4,500 &uarr;
+                </p>
+              </div>
             </div>
           </Reveal>
         </Section>
 
-        {/* Ventures */}
-        <Section id="ventures" eyebrow="Current work" title="Ventures">
-          <div className="grid gap-6 lg:grid-cols-3">
-            {ventures.map((v, i) => (
-              <Reveal key={v.name} delay={i * 0.12} className="h-full">
-                <TiltCard className="h-full rounded-2xl border border-border bg-surface/70 p-7 backdrop-blur-sm transition-colors hover:border-accent/60">
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <h3 className="text-2xl font-semibold">{v.name}</h3>
-                      <p className="text-sm text-accent">{v.title}</p>
-                      {v.org && <p className="text-xs text-muted">{v.org}</p>}
-                    </div>
-                    <span className="flex items-center gap-2 rounded-full border border-border px-3 py-1 text-xs text-muted">
-                      <span className="relative flex h-2 w-2">
-                        <span className="pulse-ring absolute inset-0 rounded-full bg-accent-2" />
-                        <span className="relative h-2 w-2 rounded-full bg-accent-2" />
-                      </span>
-                      {v.period}
-                    </span>
-                  </div>
-                  <p className="mt-4 text-muted">{v.blurb}</p>
-                  {v.points.length > 0 && (
-                    <ul className="mt-4 space-y-2 text-sm text-muted">
-                      {v.points.map((p) => (
-                        <li key={p} className="flex gap-2">
-                          <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
-                          {p}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                  {v.href && (
-                    <a
-                      href={v.href}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="mt-5 inline-block text-sm font-medium text-accent-2 hover:underline"
+        {/* Ventures: stacking cards */}
+        <Section id="ventures" num="02" title="What I run">
+          <div className="space-y-10 pb-16">
+            {ventures.map((v, i) => {
+              const tone = CARD_TONES[i % CARD_TONES.length];
+              return (
+                <div
+                  key={v.name}
+                  className="sticky"
+                  style={{ top: `calc(5.25rem + ${i * 1.4}rem)` }}
+                >
+                  <article
+                    className={`hard-lg relative overflow-hidden rounded-[2rem] p-5 sm:p-12 ${tone.bg} ${
+                      i % 2 ? "md:-rotate-[0.6deg]" : "md:rotate-[0.6deg]"
+                    }`}
+                  >
+                    <span
+                      aria-hidden
+                      className="pointer-events-none absolute -right-4 -top-10 select-none font-display text-[8rem] font-extrabold leading-none opacity-[0.13] sm:text-[18rem]"
                     >
-                      Visit {v.href.replace("https://", "")} →
-                    </a>
-                  )}
-                </TiltCard>
-              </Reveal>
-            ))}
+                      0{i + 1}
+                    </span>
+                    <div className="relative grid gap-8 md:grid-cols-[1fr_auto] md:items-center">
+                      <div>
+                        <span className={`inline-block rounded-full px-3 py-1 font-mono text-xs font-bold uppercase tracking-wider ${tone.chip}`}>
+                          {v.title}
+                          {v.org ? ` · ${v.org}` : ""}
+                        </span>
+                        <h3
+                          className="mt-4 font-display text-5xl font-extrabold leading-[0.95] tracking-tight sm:text-7xl"
+                          style={{ fontVariationSettings: '"wdth" 80' }}
+                        >
+                          {v.name}
+                        </h3>
+                        <p className="mt-4 max-w-2xl text-lg leading-snug">{v.blurb}</p>
+                        {v.points.length > 0 && (
+                          <ul className="mt-4 max-w-2xl space-y-2 text-sm leading-snug sm:text-base">
+                            {v.points.map((p) => (
+                              <li key={p} className="flex gap-3">
+                                <span className="mt-2 h-2 w-2 shrink-0 bg-current" />
+                                {p}
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                        {v.href && (
+                          <a
+                            href={v.href}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="hard mt-6 inline-block rounded-full bg-paper px-6 py-2.5 font-semibold text-ink transition active:translate-x-1 active:translate-y-1 active:shadow-none"
+                          >
+                            Open {v.href.replace("https://", "")} &#8599;
+                          </a>
+                        )}
+                      </div>
+                      <div className="hidden md:block">
+                        <Badge text={v.period.toUpperCase()} />
+                      </div>
+                    </div>
+                  </article>
+                </div>
+              );
+            })}
           </div>
         </Section>
 
-        {/* Experience */}
-        <Section id="experience" eyebrow="Experience" title="Content & collaborations">
-          <Timeline>
-            {experience.map((e) => (
-              <li key={e.role + e.org} className="relative">
-                <span className="absolute -left-[37px] top-2 h-2.5 w-2.5 rounded-full bg-accent shadow-[0_0_12px_2px_rgba(247,147,30,0.7)]" />
-                <Reveal>
-                  <div className="flex flex-wrap items-baseline justify-between gap-x-4">
-                    <h3 className="text-lg font-semibold">{e.role}</h3>
-                    <span className="font-mono text-xs text-muted">{e.period}</span>
-                  </div>
-                  <p className="text-sm text-accent-2">{e.org}</p>
-                  <ul className="mt-2 space-y-1 text-sm text-muted">
-                    {e.points.map((p) => (
-                      <li key={p}>– {p}</li>
-                    ))}
-                  </ul>
-                </Reveal>
-              </li>
-            ))}
-          </Timeline>
-        </Section>
+        {/* Physics playground */}
+        <section className="mx-auto max-w-6xl px-5 pb-10 pt-6">
+          <Reveal>
+            <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
+              <h2
+                className="font-display text-4xl font-extrabold tracking-tight sm:text-6xl"
+                style={{ fontVariationSettings: '"wdth" 78' }}
+              >
+                A box of things I&apos;ve made
+              </h2>
+              <p className="font-hand text-2xl text-ember"><span className="[@media(hover:none)]:hidden">go on, throw them around</span>
+                <span className="hidden [@media(hover:none)]:inline">tap the box to shake it</span> &darr;
+              </p>
+            </div>
+          </Reveal>
+          <Playground tags={tags} />
+        </section>
 
-        {/* Achievements */}
-        <Section id="achievements" eyebrow="Recognition" title="Key achievements">
-          <div className="grid gap-4 md:grid-cols-3">
-            {achievements.map((a, i) => (
-              <Reveal key={a} delay={i * 0.1} className="h-full">
-                <TiltCard className="h-full rounded-2xl border border-border bg-surface/70 p-6 text-sm leading-relaxed text-muted backdrop-blur-sm">
-                  <span className="gradient-text mb-3 block text-3xl">★</span>
-                  {a}
-                </TiltCard>
-              </Reveal>
-            ))}
-          </div>
-        </Section>
+        {/* Experience: pinned ticket reel */}
+        <ExperienceReel items={experience} />
 
-        {/* Skills */}
-        <Section id="skills" eyebrow="Skills" title="What I bring">
-          <div className="grid gap-6 md:grid-cols-2">
-            {skills.map((g, i) => (
-              <Reveal key={g.group} delay={i * 0.08}>
-                <div className="rounded-2xl border border-border bg-surface/70 p-6 backdrop-blur-sm">
-                  <h3 className="mb-4 font-semibold">{g.group}</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {g.items.map((item) => (
-                      <span
-                        key={item}
-                        className="rounded-full border border-border px-3 py-1 text-xs text-muted transition hover:-translate-y-0.5 hover:border-accent hover:text-foreground"
+        {/* Toolkit: periodic table */}
+        <Section id="toolkit" num="03" title="The periodic table of me">
+          <div className="space-y-10">
+            {toolkit.map((g, gi) => (
+              <Reveal key={g.group}>
+                <div className="mb-3 flex items-center gap-3">
+                  <span className={`hard h-4 w-4 ${TILE_TONES[gi]}`} />
+                  <h3 className="font-mono text-sm font-bold uppercase tracking-[0.2em]">{g.group}</h3>
+                </div>
+                <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-7">
+                  {g.items.map(([sym, name], i) => {
+                    const n = toolkit.slice(0, gi).reduce((a, x) => a + x.items.length, 0) + i + 1;
+                    return (
+                      <div
+                        key={sym + name}
+                        className={`hard group relative aspect-square cursor-default rounded-md p-2 transition duration-200 hover:z-10 hover:-translate-y-1.5 hover:-rotate-2 hover:shadow-[7px_7px_0_#3b0d1f] ${TILE_TONES[gi]}`}
                       >
-                        {item}
-                      </span>
-                    ))}
-                  </div>
+                        <span className="font-mono text-[11px] font-bold">{n}</span>
+                        <span
+                          className="absolute inset-0 flex items-center justify-center font-display text-4xl font-extrabold sm:text-5xl"
+                          style={{ fontVariationSettings: '"wdth" 90' }}
+                        >
+                          {sym}
+                        </span>
+                        <span className="absolute inset-x-1 bottom-1.5 text-center text-[10px] font-semibold leading-tight">
+                          {name}
+                        </span>
+                      </div>
+                    );
+                  })}
                 </div>
               </Reveal>
             ))}
           </div>
-          <Reveal className="mt-10">
-            <h3 className="mb-4 font-semibold">Education</h3>
-            <div className="grid gap-4 md:grid-cols-2">
+        </Section>
+
+        {/* Recognition: stamps */}
+        <Section id="recognition" num="04" title="Stamped & approved">
+          <div className="grid gap-12 py-4 md:grid-cols-3">
+            {stamps.map((s, i) => (
+              <Stamp key={s.title} {...s} delay={i * 0.18} />
+            ))}
+          </div>
+          <Reveal className="mt-16">
+            <div className="hard mx-auto max-w-3xl rounded-xl bg-paper p-6">
+              <p className="mb-4 font-mono text-xs font-bold uppercase tracking-[0.2em]">Report card</p>
               {education.map((e) => (
-                <div key={e.title} className="rounded-2xl border border-border bg-surface/50 p-5 backdrop-blur-sm">
-                  <p className="font-medium">{e.title}</p>
-                  <p className="text-sm text-muted">{e.place}</p>
-                  <p className="mt-1 text-xs text-accent">{e.note}</p>
+                <div key={e.title} className="flex flex-wrap items-baseline justify-between gap-2 border-t-2 border-dashed border-ink/30 py-3">
+                  <div>
+                    <p className="font-display text-xl font-bold">{e.title}</p>
+                    <p className="text-sm text-ink/70">{e.place}</p>
+                  </div>
+                  <p className="font-mono text-sm font-bold text-ember">{e.note}</p>
                 </div>
               ))}
             </div>
-            <p className="mt-4 text-sm text-muted">Languages: English, Hindi</p>
           </Reveal>
         </Section>
 
         {/* Contact */}
-        <Section id="contact" eyebrow="Contact" title="Let's work together">
-          <Reveal>
-            <div className="relative overflow-hidden rounded-3xl border border-border bg-gradient-to-br from-accent/20 via-surface/60 to-accent-2/20 p-8 backdrop-blur sm:p-12">
-              <p className="max-w-xl text-muted">
-                Open to academic content, assessment design and EdTech strategy conversations.
-              </p>
-              <div className="mt-6 flex flex-col gap-3 text-lg sm:flex-row sm:gap-8">
-                <a href={`mailto:${profile.email}`} className="hover:text-accent">
-                  {profile.email}
-                </a>
-                <a href={`tel:${profile.phone}`} className="hover:text-accent">
-                  {profile.phone}
-                </a>
-                <span className="text-muted">{profile.location}</span>
+        <section id="contact" className="relative overflow-hidden bg-ink pb-36 pt-20 text-ivory md:py-24">
+          <div className="mx-auto max-w-6xl px-5">
+            <Reveal>
+              <p className="font-mono text-xs uppercase tracking-[0.25em] text-sun">(05) Contact</p>
+              <h2
+                className="mt-4 font-display text-[clamp(4rem,17vw,15rem)] font-extrabold uppercase leading-[0.85] tracking-tight"
+                style={{ fontVariationSettings: '"wdth" 76' }}
+              >
+                Say hi
+              </h2>
+            </Reveal>
+
+            <Reveal delay={0.1} className="mt-12">
+              <RollLink
+                href={`mailto:${profile.email}`}
+                text={profile.email}
+                className="font-display text-[clamp(1.4rem,5vw,4.5rem)] font-bold"
+              />
+              <div className="mt-10 flex flex-wrap items-center gap-5">
+                <Magnetic>
+                  <a
+                    href={whatsappLink}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-3 rounded-full border-2 border-ivory bg-[#25D366] px-7 py-4 font-semibold text-ink shadow-[5px_5px_0_#fbf4f1] transition active:translate-x-1 active:translate-y-1 active:shadow-none"
+                  >
+                    <WhatsAppIcon />
+                    Message me on WhatsApp
+                  </a>
+                </Magnetic>
+                <span className="font-hand text-2xl text-sun">it opens with a message ready to send</span>
               </div>
+            </Reveal>
+
+            <div className="mt-20 flex flex-wrap items-center justify-between gap-4 border-t border-ivory/20 pt-6 text-sm text-ivory/70">
+              <DelhiClock />
+              <span>&copy; 2026 {profile.name}</span>
             </div>
-          </Reveal>
-        </Section>
+          </div>
+        </section>
       </main>
-      <footer className="relative z-10 border-t border-border bg-background/60 py-8 text-center text-sm text-muted backdrop-blur">
-        © 2026 {profile.name}
-      </footer>
     </>
   );
 }

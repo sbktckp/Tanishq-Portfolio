@@ -3,24 +3,27 @@ import Reveal from "./Reveal";
 
 export default function Section({
   id,
-  eyebrow,
+  num,
   title,
   children,
 }: {
   id: string;
-  eyebrow: string;
+  num: string;
   title: string;
   children: ReactNode;
 }) {
   return (
-    <section id={id} className="mx-auto max-w-6xl px-5 py-20">
+    <section id={id} className="mx-auto max-w-6xl px-5 py-16 sm:py-24">
       <Reveal>
-        <p className="mb-2 font-mono text-xs uppercase tracking-[0.2em] text-accent">
-          {eyebrow}
-        </p>
-        <h2 className="mb-10 text-3xl font-semibold tracking-tight sm:text-4xl">
-          {title}
-        </h2>
+        <div className="mb-12 flex items-end justify-between gap-6 border-b-2 border-ink pb-4">
+          <h2
+            className="font-display text-5xl font-extrabold tracking-tight sm:text-7xl"
+            style={{ fontVariationSettings: '"wdth" 78' }}
+          >
+            {title}
+          </h2>
+          <span className="pb-2 font-mono text-sm">({num})</span>
+        </div>
       </Reveal>
       {children}
     </section>

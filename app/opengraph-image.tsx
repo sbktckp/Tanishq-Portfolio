@@ -20,8 +20,8 @@ export default async function OpengraphImage() {
           alignItems: "center",
           justifyContent: "space-between",
           padding: "64px 80px",
-          background: "linear-gradient(135deg, #06121d 0%, #0b1d2c 100%)",
-          color: "#eef2f5",
+          background: "linear-gradient(135deg, #faf8f3 0%, #f4e6e3 100%)",
+          color: "#3b0d1f",
           position: "relative",
         }}
       >
@@ -33,7 +33,7 @@ export default async function OpengraphImage() {
             width: 420,
             height: 420,
             borderRadius: 9999,
-            background: "rgba(247,147,30,0.25)",
+            background: "rgba(179,32,77,0.3)",
             filter: "blur(80px)",
           }}
         />
@@ -43,7 +43,7 @@ export default async function OpengraphImage() {
               display: "flex",
               fontSize: 22,
               letterSpacing: 6,
-              color: "#f7931e",
+              color: "#b3204d",
               textTransform: "uppercase",
             }}
           >
@@ -52,10 +52,10 @@ export default async function OpengraphImage() {
           <div style={{ display: "flex", fontSize: 84, fontWeight: 700, marginTop: 16, lineHeight: 1.05 }}>
             Tanishq Kansal
           </div>
-          <div style={{ display: "flex", fontSize: 29, color: "#8da1b3", marginTop: 20, whiteSpace: "nowrap" }}>
+          <div style={{ display: "flex", fontSize: 29, color: "#7a5a63", marginTop: 20, whiteSpace: "nowrap" }}>
             Managing Director, AxiomPrep
           </div>
-          <div style={{ display: "flex", fontSize: 26, marginTop: 36, color: "#eef2f5" }}>
+          <div style={{ display: "flex", fontSize: 26, marginTop: 36, color: "#3b0d1f" }}>
             Examlytics · NEET &amp; IIT-JEE
           </div>
         </div>
@@ -64,7 +64,7 @@ export default async function OpengraphImage() {
             display: "flex",
             padding: 6,
             borderRadius: 40,
-            background: "linear-gradient(135deg, #f7931e, #2aace2)",
+            background: "linear-gradient(135deg, #b3204d, #7a1f3d)",
           }}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}

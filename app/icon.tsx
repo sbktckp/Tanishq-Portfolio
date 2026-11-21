@@ -1,9 +1,10 @@
 import { ImageResponse } from "next/og";
+import { LOGO_PATHS } from "@/components/Logo";
 
 export const size = { width: 512, height: 512 };
 export const contentType = "image/png";
 
-/** Monogram favicon: bold "T" + orange full stop (mirrors the "Tanishq." wordmark). Pure shapes, no font needed. */
+/** Favicon: the hand-drawn TK monogram in orange on black. */
 export default function Icon() {
   return new ImageResponse(
     (
@@ -12,47 +13,17 @@ export default function Icon() {
           width: "100%",
           height: "100%",
           display: "flex",
-          position: "relative",
-          borderRadius: 116,
-          background: "linear-gradient(135deg, #0f2d46 0%, #06121d 100%)",
+          alignItems: "center",
+          justifyContent: "center",
+          background: "#050407",
+          borderRadius: 112,
         }}
       >
-        {/* T top bar */}
-        <div
-          style={{
-            position: "absolute",
-            left: 104,
-            top: 104,
-            width: 304,
-            height: 84,
-            borderRadius: 24,
-            background: "linear-gradient(90deg, #2aace2, #eef2f5)",
-          }}
-        />
-        {/* T stem */}
-        <div
-          style={{
-            position: "absolute",
-            left: 214,
-            top: 104,
-            width: 84,
-            height: 304,
-            borderRadius: 24,
-            background: "#eef2f5",
-          }}
-        />
-        {/* orange dot */}
-        <div
-          style={{
-            position: "absolute",
-            left: 330,
-            top: 322,
-            width: 86,
-            height: 86,
-            borderRadius: 9999,
-            background: "linear-gradient(135deg, #f7931e, #f05a1a)",
-          }}
-        />
+        <svg width="380" height="352" viewBox="420 240 810 750" fill="none">
+          {LOGO_PATHS.map((d) => (
+            <path key={d} d={d} stroke="#ff6a2e" strokeWidth="46" strokeLinecap="round" strokeLinejoin="round" />
+          ))}
+        </svg>
       </div>
     ),
     { ...size },

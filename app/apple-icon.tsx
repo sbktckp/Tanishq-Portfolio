@@ -1,9 +1,9 @@
 import { ImageResponse } from "next/og";
+import { LOGO_PATHS } from "@/components/Logo";
 
 export const size = { width: 180, height: 180 };
 export const contentType = "image/png";
 
-/** iOS home-screen icon: same monogram, full-bleed (iOS applies its own rounding). */
 export default function AppleIcon() {
   return new ImageResponse(
     (
@@ -12,43 +12,16 @@ export default function AppleIcon() {
           width: "100%",
           height: "100%",
           display: "flex",
-          position: "relative",
-          background: "linear-gradient(135deg, #0f2d46 0%, #06121d 100%)",
+          alignItems: "center",
+          justifyContent: "center",
+          background: "#050407",
         }}
       >
-        <div
-          style={{
-            position: "absolute",
-            left: 36,
-            top: 36,
-            width: 108,
-            height: 30,
-            borderRadius: 9,
-            background: "linear-gradient(90deg, #2aace2, #eef2f5)",
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            left: 75,
-            top: 36,
-            width: 30,
-            height: 108,
-            borderRadius: 9,
-            background: "#eef2f5",
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            left: 116,
-            top: 114,
-            width: 30,
-            height: 30,
-            borderRadius: 9999,
-            background: "linear-gradient(135deg, #f7931e, #f05a1a)",
-          }}
-        />
+        <svg width="134" height="124" viewBox="420 240 810 750" fill="none">
+          {LOGO_PATHS.map((d) => (
+            <path key={d} d={d} stroke="#ff6a2e" strokeWidth="46" strokeLinecap="round" strokeLinejoin="round" />
+          ))}
+        </svg>
       </div>
     ),
     { ...size },

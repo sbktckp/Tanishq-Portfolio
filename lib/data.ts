@@ -2,7 +2,6 @@ export const profile = {
   name: "Tanishq Kansal",
   role: "Managing Director, AxiomPrep · Academic Content Head, Examlytics",
   email: "tanishq.kansal35@gmail.com",
-  phone: "7303188147",
   location: "Delhi, India",
   summary:
     "Academic Content Lead, EdTech co-founder and content professional with experience in academic content development, assessment design, educational communication and creative production. Managing Director and co-founder of AxiomPrep by Examlytics Group of Companies, and Academic Content Head at Examlytics. I'm interested in building scalable learning solutions, leading content teams and developing academic strategy in the startup ecosystem.",
@@ -22,10 +21,10 @@ export const marquee = [
 ];
 
 export const stats: { value: number; suffix?: string; label: string }[] = [
-  { value: 4500, label: "NEET questions designed" },
+  { value: 4500, label: "NEET questions written" },
   { value: 50000, suffix: "+", label: "PYQs on AxiomPrep" },
-  { value: 25, label: "Full question paper sets" },
-  { value: 10, suffix: "+", label: "EdTech collaborations" },
+  { value: 25, label: "Full-length test papers" },
+  { value: 12, label: "Teams I've worked with" },
 ];
 
 export const ventures: {
@@ -159,55 +158,6 @@ export const achievements = [
   "Content on Axiom Prep validated and recommended by HODs of top institutes.",
 ];
 
-export const skills: { group: string; items: string[] }[] = [
-  {
-    group: "Academic & Assessment",
-    items: [
-      "NEET & CBSE Content",
-      "Question Paper Design",
-      "MCQ Development",
-      "Research & Fact-Checking",
-      "Solution Writing",
-      "Quality Review",
-    ],
-  },
-  {
-    group: "Content & Creative",
-    items: [
-      "Content Writing",
-      "Script Writing",
-      "Graphic Design",
-      "Presentation Design",
-      "Meta Ads",
-      "Educational Communication",
-    ],
-  },
-  {
-    group: "Leadership",
-    items: [
-      "Startup Co-founding",
-      "Operations",
-      "Content Planning",
-      "Team Coordination",
-      "Workflow Management",
-      "Quality Control",
-    ],
-  },
-  {
-    group: "Subjects & Tools",
-    items: [
-      "Physics",
-      "Chemistry",
-      "Botany",
-      "Zoology",
-      "Information Practices",
-      "Canva",
-      "PowerPoint",
-      "Google Workspace",
-    ],
-  },
-];
-
 export const education = [
   {
     title: "BMLS, Medical Laboratory Science",
@@ -215,4 +165,104 @@ export const education = [
     note: "Pursuing",
   },
   { title: "Class 12, CBSE", place: "2025", note: "Score: 90%" },
+];
+
+export const whatsapp = {
+  number: "917303188147",
+  message: "Hi Tanishq, I saw your portfolio and I'd like to connect with you about ",
+};
+
+export const whatsappLink = `https://wa.me/${whatsapp.number}?text=${encodeURIComponent(whatsapp.message)}`;
+
+export const tags = [
+  "NEET",
+  "IIT-JEE",
+  "Physics",
+  "Chemistry",
+  "Botany",
+  "Zoology",
+  "4,500 MCQs",
+  "25 paper sets",
+  "Scripts",
+  "Slides",
+  "Worksheets",
+  "Notes",
+  "Solutions",
+  "Fact-checking",
+  "CBSE 11 & 12",
+  "Canva",
+  "Meta Ads",
+  "Hindi",
+  "English",
+];
+
+export const stamps = [
+  {
+    title: "Proofreader",
+    sub: "M.S. Chouhan NEET Book, 13th Edition",
+    rotate: -6,
+    tone: "ember",
+  },
+  {
+    title: "Launch event",
+    sub: "Physics Wallah Vijeta Series 2025-26",
+    rotate: 4,
+    tone: "sky",
+  },
+  {
+    title: "HOD validated",
+    sub: "AxiomPrep content, recommended by HODs of top institutes",
+    rotate: -3,
+    tone: "teal",
+  },
+] as const;
+
+/** Periodic-table style skills: [symbol, name] */
+export const toolkit: { group: string; items: [string, string][] }[] = [
+  {
+    group: "Academic",
+    items: [
+      ["Qp", "Question papers"],
+      ["Mc", "MCQ writing"],
+      ["Fc", "Fact-checking"],
+      ["Sw", "Solutions"],
+      ["Qr", "Quality review"],
+      ["Ne", "NEET content"],
+      ["Cb", "CBSE content"],
+    ],
+  },
+  {
+    group: "Creative",
+    items: [
+      ["Sc", "Script writing"],
+      ["Gd", "Graphic design"],
+      ["Pp", "Presentations"],
+      ["Ma", "Meta ads"],
+      ["Cw", "Content writing"],
+      ["Cv", "Canva"],
+    ],
+  },
+  {
+    group: "Leadership",
+    items: [
+      ["Sf", "Startup founding"],
+      ["Op", "Operations"],
+      ["Cp", "Content planning"],
+      ["Tc", "Team coordination"],
+      ["Wf", "Workflows"],
+      ["Qc", "Quality control"],
+    ],
+  },
+  {
+    group: "Subjects",
+    items: [
+      ["Ph", "Physics"],
+      ["Ch", "Chemistry"],
+      ["Bo", "Botany"],
+      ["Zo", "Zoology"],
+      ["Ip", "Info. Practices"],
+      ["Hi", "Hindi"],
+      ["En", "English"],
+    ],
+  },
 ];
