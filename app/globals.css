@@ -1,13 +1,16 @@
 @import "tailwindcss";
 
+/* AxiomPrep brand palette (navy / orange / sky / teal) on its dark base */
 :root {
-  --background: #071426;
-  --surface: #0d1f38;
-  --foreground: #e8eef7;
-  --muted: #93a4bd;
-  --border: #1c3250;
-  --accent: #ff6a3d;
-  --accent-2: #b46bff;
+  --background: #06121d;
+  --surface: #0b1d2c;
+  --foreground: #eef2f5;
+  --muted: #8da1b3;
+  --border: rgba(199, 215, 230, 0.12);
+  --accent: #f7931e;
+  --accent-deep: #f05a1a;
+  --accent-2: #2aace2;
+  --teal: #2e7d8f;
 }
 
 @theme inline {
@@ -17,7 +20,9 @@
   --color-muted: var(--muted);
   --color-border: var(--border);
   --color-accent: var(--accent);
+  --color-accent-deep: var(--accent-deep);
   --color-accent-2: var(--accent-2);
+  --color-teal: var(--teal);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -31,19 +36,42 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), system-ui, sans-serif;
+  overflow-x: hidden;
 }
 
-.reveal {
-  opacity: 0;
-  transform: translateY(16px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
+::selection {
+  background: var(--accent);
+  color: #06121d;
 }
-.reveal.in {
-  opacity: 1;
-  transform: none;
+
+.gradient-text {
+  background: linear-gradient(90deg, var(--accent), var(--accent-deep) 45%, var(--accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.marquee {
+  animation: marquee 32s linear infinite;
+}
+.marquee-reverse {
+  animation: marquee 40s linear infinite reverse;
+}
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.9); opacity: 0.7; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+.pulse-ring {
+  animation: pulse-ring 2.2s ease-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .reveal { opacity: 1; transform: none; transition: none; }
+  .marquee, .marquee-reverse, .pulse-ring { animation: none; }
 }

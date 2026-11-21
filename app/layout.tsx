@@ -6,9 +6,9 @@ const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Tanishq Kansal — Academic Content Lead & EdTech Co-founder",
+  title: "Tanishq Kansal — Managing Director, AxiomPrep & Academic Content Head",
   description:
-    "Portfolio of Tanishq Kansal: co-founder & COO of Axiom Prep, Academic Content Head at Examlytics, NEET and IIT-JEE content and assessment design.",
+    "Portfolio of Tanishq Kansal: Managing Director of AxiomPrep (Examlytics Group), Academic Content Head at Examlytics, NEET and IIT-JEE content and assessment design.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

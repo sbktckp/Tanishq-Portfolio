@@ -2,8 +2,18 @@ import Image from "next/image";
 import Nav from "@/components/Nav";
 import Reveal from "@/components/Reveal";
 import Section from "@/components/Section";
+import SceneLoader from "@/components/three/SceneLoader";
+import BasketballLoader from "@/components/fx/BasketballLoader";
+import PageChrome from "@/components/fx/PageChrome";
+import SplitText from "@/components/fx/SplitText";
+import Magnetic from "@/components/fx/Magnetic";
+import Marquee from "@/components/fx/Marquee";
+import Counter from "@/components/fx/Counter";
+import TiltCard from "@/components/fx/TiltCard";
+import Timeline from "@/components/fx/Timeline";
 import {
   profile,
+  marquee,
   stats,
   ventures,
   experience,
@@ -12,69 +22,90 @@ import {
   education,
 } from "@/lib/data";
 
+const LOADER_MS = 2300;
+
 export default function Home() {
   return (
     <>
+      <BasketballLoader />
+      <SceneLoader />
+      <PageChrome />
       <Nav />
-      <main id="top">
+      <main id="top" className="relative z-10">
         {/* Hero */}
-        <div className="relative overflow-hidden">
-          <div className="pointer-events-none absolute -left-40 top-10 h-96 w-96 rounded-full bg-accent/20 blur-[120px]" />
-          <div className="pointer-events-none absolute -right-32 top-40 h-96 w-96 rounded-full bg-accent-2/20 blur-[120px]" />
-          <section className="relative mx-auto grid max-w-6xl items-center gap-12 px-5 pb-20 pt-32 md:grid-cols-[1.2fr_1fr] md:pt-40">
-            <div>
-              <p className="mb-4 font-mono text-xs uppercase tracking-[0.2em] text-accent">
-                Hello, I&apos;m
+        <section className="relative mx-auto grid min-h-screen max-w-6xl items-center gap-12 px-5 pb-20 pt-28 md:grid-cols-[1.2fr_1fr]">
+          <div>
+            <p className="mb-4 font-mono text-xs uppercase tracking-[0.2em] text-accent">
+              Hello, I&apos;m
+            </p>
+            <SplitText
+              text={profile.name}
+              delay={LOADER_MS / 1000 + 0.1}
+              className="text-5xl font-semibold tracking-tight sm:text-7xl"
+            />
+            <Reveal delay={LOADER_MS / 1000 + 0.6}>
+              <p className="gradient-text mt-4 text-xl font-medium sm:text-2xl">
+                Managing Director, AxiomPrep
               </p>
-              <h1 className="text-5xl font-semibold tracking-tight sm:text-7xl">
-                {profile.name}
-              </h1>
-              <p className="mt-4 text-xl text-muted sm:text-2xl">{profile.role}</p>
+              <p className="mt-1 text-lg text-muted">Academic Content Head, Examlytics</p>
               <p className="mt-6 max-w-xl leading-relaxed text-muted">
-                Co-founder &amp; COO of <span className="text-foreground">Axiom Prep</span> and
-                Academic Content Head at <span className="text-foreground">Examlytics</span>,
-                building science prep for NEET and IIT-JEE aspirants.
+                I co-founded and lead{" "}
+                <span className="text-foreground">AxiomPrep</span> by Examlytics Group of
+                Companies, building science prep for NEET and IIT-JEE aspirants from first
+                principles.
               </p>
-              <div className="mt-8 flex flex-wrap gap-3">
-                <a
-                  href="#contact"
-                  className="rounded-full bg-accent px-6 py-3 text-sm font-medium text-white transition hover:brightness-110"
-                >
-                  Get in touch
-                </a>
-                <a
-                  href="#experience"
-                  className="rounded-full border border-border px-6 py-3 text-sm font-medium transition hover:border-accent"
-                >
-                  View experience
-                </a>
+              <div className="mt-8 flex flex-wrap gap-4">
+                <Magnetic>
+                  <a
+                    href="#contact"
+                    className="inline-block rounded-full bg-accent px-7 py-3 text-sm font-semibold text-background shadow-[0_0_30px_-4px_rgba(247,147,30,0.6)] transition hover:brightness-110"
+                  >
+                    Get in touch
+                  </a>
+                </Magnetic>
+                <Magnetic>
+                  <a
+                    href="#experience"
+                    className="inline-block rounded-full border border-border bg-surface/50 px-7 py-3 text-sm font-medium backdrop-blur transition hover:border-accent-2"
+                  >
+                    View experience
+                  </a>
+                </Magnetic>
               </div>
+            </Reveal>
+          </div>
+
+          {/* The 3D atom tracks this element (#hero-anchor) */}
+          <div id="hero-anchor" className="mx-auto w-56 sm:w-72 md:w-full md:max-w-[17rem]">
+            <div className="rounded-[2rem] bg-gradient-to-br from-accent via-accent-deep to-accent-2 p-1 shadow-[0_0_80px_-10px_rgba(42,172,226,0.5)]">
+              <Image
+                src="/tanishq.jpg"
+                alt="Portrait of Tanishq Kansal"
+                width={960}
+                height={1280}
+                priority
+                className="aspect-[4/5] w-full rounded-[1.85rem] object-cover object-top"
+              />
             </div>
-            <div className="mx-auto w-64 sm:w-80 md:w-full md:max-w-sm">
-              <div className="rounded-[2rem] bg-gradient-to-br from-accent to-accent-2 p-1">
-                <Image
-                  src="/tanishq.jpg"
-                  alt="Portrait of Tanishq Kansal"
-                  width={960}
-                  height={1280}
-                  priority
-                  className="aspect-[4/5] w-full rounded-[1.85rem] object-cover object-top"
-                />
-              </div>
-            </div>
-          </section>
-        </div>
+          </div>
+        </section>
+
+        <Marquee items={marquee} />
 
         {/* Stats */}
-        <div className="mx-auto max-w-6xl px-5">
-          <Reveal className="grid grid-cols-2 gap-4 md:grid-cols-4">
-            {stats.map((s) => (
-              <div key={s.label} className="rounded-2xl border border-border bg-surface p-6">
-                <div className="text-3xl font-semibold text-accent">{s.value}</div>
-                <div className="mt-1 text-sm text-muted">{s.label}</div>
-              </div>
+        <div className="mx-auto mt-10 max-w-6xl px-5">
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+            {stats.map((s, i) => (
+              <Reveal key={s.label} delay={i * 0.1}>
+                <TiltCard className="h-full rounded-2xl border border-border bg-surface/70 p-6 backdrop-blur-sm">
+                  <div className="gradient-text text-3xl font-semibold sm:text-4xl">
+                    <Counter value={s.value} suffix={s.suffix} />
+                  </div>
+                  <div className="mt-1 text-sm text-muted">{s.label}</div>
+                </TiltCard>
+              </Reveal>
             ))}
-          </Reveal>
+          </div>
         </div>
 
         {/* About */}
@@ -85,7 +116,7 @@ export default function Home() {
               alt="Tanishq Kansal"
               width={240}
               height={240}
-              className="mx-auto h-48 w-48 rounded-full"
+              className="mx-auto h-48 w-48 rounded-full ring-2 ring-accent/60 ring-offset-4 ring-offset-background"
             />
             <div className="space-y-4 leading-relaxed text-muted">
               <p>{profile.summary}</p>
@@ -101,39 +132,46 @@ export default function Home() {
 
         {/* Ventures */}
         <Section id="ventures" eyebrow="Current work" title="Ventures">
-          <div className="grid gap-6 md:grid-cols-2">
-            {ventures.map((v) => (
-              <Reveal key={v.name}>
-                <article className="h-full rounded-2xl border border-border bg-surface p-7 transition hover:border-accent/60">
+          <div className="grid gap-6 lg:grid-cols-3">
+            {ventures.map((v, i) => (
+              <Reveal key={v.name} delay={i * 0.12} className="h-full">
+                <TiltCard className="h-full rounded-2xl border border-border bg-surface/70 p-7 backdrop-blur-sm transition-colors hover:border-accent/60">
                   <div className="flex items-start justify-between gap-4">
                     <div>
                       <h3 className="text-2xl font-semibold">{v.name}</h3>
                       <p className="text-sm text-accent">{v.title}</p>
+                      {v.org && <p className="text-xs text-muted">{v.org}</p>}
                     </div>
-                    <span className="rounded-full border border-border px-3 py-1 text-xs text-muted">
+                    <span className="flex items-center gap-2 rounded-full border border-border px-3 py-1 text-xs text-muted">
+                      <span className="relative flex h-2 w-2">
+                        <span className="pulse-ring absolute inset-0 rounded-full bg-accent-2" />
+                        <span className="relative h-2 w-2 rounded-full bg-accent-2" />
+                      </span>
                       {v.period}
                     </span>
                   </div>
                   <p className="mt-4 text-muted">{v.blurb}</p>
-                  <ul className="mt-4 space-y-2 text-sm text-muted">
-                    {v.points.map((p) => (
-                      <li key={p} className="flex gap-2">
-                        <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
-                        {p}
-                      </li>
-                    ))}
-                  </ul>
+                  {v.points.length > 0 && (
+                    <ul className="mt-4 space-y-2 text-sm text-muted">
+                      {v.points.map((p) => (
+                        <li key={p} className="flex gap-2">
+                          <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
+                          {p}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                   {v.href && (
                     <a
                       href={v.href}
                       target="_blank"
                       rel="noreferrer"
-                      className="mt-5 inline-block text-sm font-medium text-accent hover:underline"
+                      className="mt-5 inline-block text-sm font-medium text-accent-2 hover:underline"
                     >
                       Visit {v.href.replace("https://", "")} →
                     </a>
                   )}
-                </article>
+                </TiltCard>
               </Reveal>
             ))}
           </div>
@@ -141,11 +179,11 @@ export default function Home() {
 
         {/* Experience */}
         <Section id="experience" eyebrow="Experience" title="Content & collaborations">
-          <ol className="relative space-y-8 border-l border-border pl-8">
+          <Timeline>
             {experience.map((e) => (
               <li key={e.role + e.org} className="relative">
+                <span className="absolute -left-[37px] top-2 h-2.5 w-2.5 rounded-full bg-accent shadow-[0_0_12px_2px_rgba(247,147,30,0.7)]" />
                 <Reveal>
-                  <span className="absolute -left-[37px] top-2 h-2.5 w-2.5 rounded-full bg-accent" />
                   <div className="flex flex-wrap items-baseline justify-between gap-x-4">
                     <h3 className="text-lg font-semibold">{e.role}</h3>
                     <span className="font-mono text-xs text-muted">{e.period}</span>
@@ -159,18 +197,18 @@ export default function Home() {
                 </Reveal>
               </li>
             ))}
-          </ol>
+          </Timeline>
         </Section>
 
         {/* Achievements */}
         <Section id="achievements" eyebrow="Recognition" title="Key achievements">
           <div className="grid gap-4 md:grid-cols-3">
-            {achievements.map((a) => (
-              <Reveal key={a}>
-                <div className="h-full rounded-2xl border border-border bg-surface p-6 text-sm leading-relaxed text-muted">
-                  <span className="mb-3 block text-2xl text-accent">★</span>
+            {achievements.map((a, i) => (
+              <Reveal key={a} delay={i * 0.1} className="h-full">
+                <TiltCard className="h-full rounded-2xl border border-border bg-surface/70 p-6 text-sm leading-relaxed text-muted backdrop-blur-sm">
+                  <span className="gradient-text mb-3 block text-3xl">★</span>
                   {a}
-                </div>
+                </TiltCard>
               </Reveal>
             ))}
           </div>
@@ -179,17 +217,17 @@ export default function Home() {
         {/* Skills */}
         <Section id="skills" eyebrow="Skills" title="What I bring">
           <div className="grid gap-6 md:grid-cols-2">
-            {skills.map((g) => (
-              <Reveal key={g.group}>
-                <div className="rounded-2xl border border-border bg-surface p-6">
+            {skills.map((g, i) => (
+              <Reveal key={g.group} delay={i * 0.08}>
+                <div className="rounded-2xl border border-border bg-surface/70 p-6 backdrop-blur-sm">
                   <h3 className="mb-4 font-semibold">{g.group}</h3>
                   <div className="flex flex-wrap gap-2">
-                    {g.items.map((i) => (
+                    {g.items.map((item) => (
                       <span
-                        key={i}
-                        className="rounded-full border border-border px-3 py-1 text-xs text-muted"
+                        key={item}
+                        className="rounded-full border border-border px-3 py-1 text-xs text-muted transition hover:-translate-y-0.5 hover:border-accent hover:text-foreground"
                       >
-                        {i}
+                        {item}
                       </span>
                     ))}
                   </div>
@@ -201,7 +239,7 @@ export default function Home() {
             <h3 className="mb-4 font-semibold">Education</h3>
             <div className="grid gap-4 md:grid-cols-2">
               {education.map((e) => (
-                <div key={e.title} className="rounded-2xl border border-border p-5">
+                <div key={e.title} className="rounded-2xl border border-border bg-surface/50 p-5 backdrop-blur-sm">
                   <p className="font-medium">{e.title}</p>
                   <p className="text-sm text-muted">{e.place}</p>
                   <p className="mt-1 text-xs text-accent">{e.note}</p>
@@ -215,7 +253,7 @@ export default function Home() {
         {/* Contact */}
         <Section id="contact" eyebrow="Contact" title="Let's work together">
           <Reveal>
-            <div className="rounded-3xl bg-gradient-to-br from-accent/20 to-accent-2/20 p-8 sm:p-12">
+            <div className="relative overflow-hidden rounded-3xl border border-border bg-gradient-to-br from-accent/20 via-surface/60 to-accent-2/20 p-8 backdrop-blur sm:p-12">
               <p className="max-w-xl text-muted">
                 Open to academic content, assessment design and EdTech strategy conversations.
               </p>
@@ -232,7 +270,7 @@ export default function Home() {
           </Reveal>
         </Section>
       </main>
-      <footer className="border-t border-border py-8 text-center text-sm text-muted">
+      <footer className="relative z-10 border-t border-border bg-background/60 py-8 text-center text-sm text-muted backdrop-blur">
         © 2026 {profile.name}
       </footer>
     </>

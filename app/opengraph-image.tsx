@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
-export const alt = "Tanishq Kansal — Academic Content Lead & EdTech Co-founder";
+export const alt = "Tanishq Kansal — Managing Director, AxiomPrep & Academic Content Head";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -20,8 +20,8 @@ export default async function OpengraphImage() {
           alignItems: "center",
           justifyContent: "space-between",
           padding: "64px 80px",
-          background: "linear-gradient(135deg, #071426 0%, #0d1f38 100%)",
-          color: "#e8eef7",
+          background: "linear-gradient(135deg, #06121d 0%, #0b1d2c 100%)",
+          color: "#eef2f5",
           position: "relative",
         }}
       >
@@ -33,7 +33,7 @@ export default async function OpengraphImage() {
             width: 420,
             height: 420,
             borderRadius: 9999,
-            background: "rgba(255,106,61,0.25)",
+            background: "rgba(247,147,30,0.25)",
             filter: "blur(80px)",
           }}
         />
@@ -43,7 +43,7 @@ export default async function OpengraphImage() {
               display: "flex",
               fontSize: 22,
               letterSpacing: 6,
-              color: "#ff6a3d",
+              color: "#f7931e",
               textTransform: "uppercase",
             }}
           >
@@ -52,11 +52,11 @@ export default async function OpengraphImage() {
           <div style={{ display: "flex", fontSize: 84, fontWeight: 700, marginTop: 16, lineHeight: 1.05 }}>
             Tanishq Kansal
           </div>
-          <div style={{ display: "flex", fontSize: 29, color: "#93a4bd", marginTop: 20, whiteSpace: "nowrap" }}>
-            Academic Content Lead &amp; EdTech Co-founder
+          <div style={{ display: "flex", fontSize: 29, color: "#8da1b3", marginTop: 20, whiteSpace: "nowrap" }}>
+            Managing Director, AxiomPrep
           </div>
-          <div style={{ display: "flex", fontSize: 26, marginTop: 36, color: "#e8eef7" }}>
-            Axiom Prep · Examlytics · NEET &amp; IIT-JEE
+          <div style={{ display: "flex", fontSize: 26, marginTop: 36, color: "#eef2f5" }}>
+            Examlytics · NEET &amp; IIT-JEE
           </div>
         </div>
         <div
@@ -64,7 +64,7 @@ export default async function OpengraphImage() {
             display: "flex",
             padding: 6,
             borderRadius: 40,
-            background: "linear-gradient(135deg, #ff6a3d, #b46bff)",
+            background: "linear-gradient(135deg, #f7931e, #2aace2)",
           }}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}

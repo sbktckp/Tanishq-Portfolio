@@ -1,47 +1,74 @@
 export const profile = {
   name: "Tanishq Kansal",
-  role: "Academic Content Lead & EdTech Co-founder",
+  role: "Managing Director, AxiomPrep · Academic Content Head, Examlytics",
   email: "tanishq.kansal35@gmail.com",
   phone: "7303188147",
   location: "Delhi, India",
   summary:
-    "Academic Content Lead, EdTech co-founder and content professional with experience in academic content development, assessment design, educational communication and creative production. I'm interested in building scalable learning solutions, leading content teams and developing academic strategy in the startup ecosystem.",
+    "Academic Content Lead, EdTech co-founder and content professional with experience in academic content development, assessment design, educational communication and creative production. Managing Director and co-founder of AxiomPrep by Examlytics Group of Companies, and Academic Content Head at Examlytics. I'm interested in building scalable learning solutions, leading content teams and developing academic strategy in the startup ecosystem.",
 };
 
-export const stats = [
-  { value: "4,500", label: "NEET questions designed" },
-  { value: "50,000+", label: "PYQs on Axiom Prep" },
-  { value: "25", label: "Full question paper sets" },
-  { value: "10+", label: "EdTech collaborations" },
+export const marquee = [
+  "NEET",
+  "IIT-JEE",
+  "Physics",
+  "Chemistry",
+  "Botany",
+  "Zoology",
+  "Assessment Design",
+  "EdTech",
+  "AxiomPrep",
+  "Examlytics",
 ];
 
-export const ventures = [
+export const stats: { value: number; suffix?: string; label: string }[] = [
+  { value: 4500, label: "NEET questions designed" },
+  { value: 50000, suffix: "+", label: "PYQs on AxiomPrep" },
+  { value: 25, label: "Full question paper sets" },
+  { value: 10, suffix: "+", label: "EdTech collaborations" },
+];
+
+export const ventures: {
+  name: string;
+  title: string;
+  org?: string;
+  period: string;
+  href?: string;
+  blurb: string;
+  points: string[];
+}[] = [
   {
-    name: "Axiom Prep",
-    title: "Co-founder & COO",
+    name: "AxiomPrep",
+    title: "Managing Director",
+    org: "by Examlytics Group of Companies",
     period: "Present",
     href: "https://axiomprep.in",
     blurb:
-      "An online platform for NEET and IIT-JEE aspirants, built around science from first principles. I'm part of the leadership team with the Founder & CEO and the CTO.",
+      "Co-founded and lead AxiomPrep, an online platform for NEET and IIT-JEE aspirants built around science from first principles, driving its strategy, operations and growth.",
     points: [
-      "Oversee the content-making team, tech team and NEET / IIT-JEE mentors.",
-      "50,000+ past-year questions from NTA, IIT JEE and NEET, organised by topic weightage and difficulty.",
-      "Practice tests, full syllabus tests, original quizzes and rank-focused analytics with leaderboards.",
-      "Content validated and recommended by HODs of top institutes.",
+      "Manage the content-making team, tech team and NEET / IIT-JEE mentors, working closely with the Founder & CEO and the CTO.",
+      "50,000+ past-year questions from NTA, IIT JEE and NEET, practice tests, full syllabus tests, original quizzes and rank-focused analytics with leaderboards.",
+      "Content validated and recommended by HODs of top institutes for structural accuracy and concept alignment.",
     ],
   },
   {
     name: "Examlytics",
     title: "Academic Content Head",
     period: "Present",
-    href: undefined,
-    blurb:
-      "Lead academic content operations and shape content development strategy.",
+    blurb: "Lead academic content operations and shape content development strategy.",
     points: [
       "Own academic deliverables, quality and content execution.",
       "Coordinate academic workflows and support educational resource development.",
       "Contribute to content planning, team collaboration and scalable academic processes.",
     ],
+  },
+  {
+    name: "Sukesh Academy",
+    title: "Outreach",
+    org: "YouTube",
+    period: "Present",
+    blurb: "Handle outreach for Sukesh Academy on YouTube.",
+    points: [],
   },
 ];
 
