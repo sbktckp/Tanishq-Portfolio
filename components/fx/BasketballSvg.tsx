@@ -7,7 +7,7 @@ export default function BasketballSvg({ className = "" }: { className?: string }
           <circle cx="50" cy="50" r="48" />
         </clipPath>
       </defs>
-      <circle cx="50" cy="50" r="48" fill="#a3223f" />
+      <circle cx="50" cy="50" r="48" fill="#f7931e" />
       <g clipPath="url(#bb-clip)" fill="none" stroke="#3b0d1f" strokeWidth="3" strokeLinecap="round">
         <line x1="50" y1="0" x2="50" y2="100" />
         <line x1="0" y1="50" x2="100" y2="50" />

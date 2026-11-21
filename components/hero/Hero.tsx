@@ -46,7 +46,7 @@ export default function Hero() {
   const area = useRef<HTMLElement>(null);
 
   return (
-    <section ref={area} className="relative mx-auto max-w-[88rem] px-5 pb-24 pt-14 sm:pt-20">
+    <section ref={area} className="relative mx-auto max-w-[88rem] overflow-x-clip px-5 pb-24 pt-14 sm:pt-20">
       <p className="font-mono text-xs uppercase tracking-[0.25em]">
         Portfolio <span className="text-ember">/</span> Delhi, India
       </p>

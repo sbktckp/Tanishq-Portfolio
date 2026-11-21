@@ -71,7 +71,7 @@ export default function Home() {
         <Hero />
 
         {/* Scroll-reactive tape */}
-        <div className="relative my-6 h-44 sm:h-60">
+        <div className="relative my-6 h-44 overflow-hidden sm:h-60">
           <div className="absolute inset-x-[-5%] top-0 -rotate-[2.5deg] border-y-2 border-ink bg-sun py-3">
             <ScrollMarquee items={marquee} />
           </div>
@@ -94,10 +94,10 @@ export default function Home() {
                   <span className="blink h-2 w-2 rounded-full bg-ember" /> Live
                 </span>
               </div>
-              <div className="grid grid-cols-2 gap-x-10 gap-y-10 md:grid-cols-4">
+              <div className="grid grid-cols-1 gap-y-8 sm:grid-cols-2 sm:gap-x-10 lg:grid-cols-4">
                 {stats.map((s) => (
                   <div key={s.label}>
-                    <div className="font-display text-5xl font-extrabold text-sun sm:text-5xl lg:text-6xl">
+                    <div className="font-display text-6xl font-extrabold text-sun sm:text-6xl lg:text-5xl xl:text-6xl">
                       <Odometer value={s.value} suffix={s.suffix} />
                     </div>
                     <p className="mt-3 font-mono text-xs uppercase tracking-wider text-ivory/70">{s.label}</p>
@@ -143,7 +143,7 @@ export default function Home() {
                   alt=""
                   width={160}
                   height={160}
-                  className="hard absolute -right-4 -top-8 h-24 w-24 rotate-6 rounded-full bg-paper sm:-right-8 sm:h-32 sm:w-32"
+                  className="hard absolute -right-1 -top-8 h-24 w-24 rotate-6 rounded-full bg-paper sm:-right-8 sm:h-32 sm:w-32"
                 />
                 <p className="absolute -bottom-10 right-4 hidden rotate-[-4deg] font-hand text-3xl text-ember md:block">
                   25 papers x 180 = 4,500 &uarr;
@@ -279,7 +279,7 @@ export default function Home() {
 
         {/* Recognition: stamps */}
         <Section id="recognition" num="04" title="Stamped & approved">
-          <div className="grid gap-12 py-4 md:grid-cols-3">
+          <div className="grid gap-12 overflow-x-clip py-4 md:grid-cols-3">
             {stamps.map((s, i) => (
               <Stamp key={s.title} {...s} delay={i * 0.18} />
             ))}
@@ -317,7 +317,7 @@ export default function Home() {
               <RollLink
                 href={`mailto:${profile.email}`}
                 text={profile.email}
-                className="font-display text-[clamp(1.4rem,5vw,4.5rem)] font-bold"
+                className="font-display text-[clamp(1.05rem,5.4vw,4.5rem)] font-bold"
               />
               <div className="mt-10 flex flex-wrap items-center gap-5">
                 <Magnetic>

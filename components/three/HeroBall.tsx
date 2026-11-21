@@ -25,9 +25,9 @@ function makeTexture() {
   const g = c.getContext("2d")!;
 
   const base = g.createLinearGradient(0, 0, 0, h);
-  base.addColorStop(0, "#b52a4a");
-  base.addColorStop(0.5, "#a3223f");
-  base.addColorStop(1, "#8c1b35");
+  base.addColorStop(0, "#f59a2c");
+  base.addColorStop(0.5, "#f08a1c");
+  base.addColorStop(1, "#e57712");
   g.fillStyle = base;
   g.fillRect(0, 0, w, h);
 
@@ -35,7 +35,7 @@ function makeTexture() {
   for (let i = 0; i < 14000; i++) {
     const x = rng() * w;
     const y = rng() * h;
-    g.fillStyle = rng() > 0.5 ? "rgba(40,0,12,0.28)" : "rgba(255,190,205,0.16)";
+    g.fillStyle = rng() > 0.5 ? "rgba(110,40,0,0.22)" : "rgba(255,210,150,0.16)";
     g.beginPath();
     g.arc(x, y, 1.4 + rng() * 1.6, 0, Math.PI * 2);
     g.fill();

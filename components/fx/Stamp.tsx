@@ -24,7 +24,7 @@ export default function Stamp({
 }) {
   return (
     <motion.div
-      initial={{ scale: 2.4, opacity: 0, rotate: rotate - 14 }}
+      initial={{ scale: 1.7, opacity: 0, rotate: rotate - 14 }}
       whileInView={{ scale: 1, opacity: 1, rotate }}
       viewport={{ once: true, margin: "-80px" }}
       transition={{ type: "spring", stiffness: 420, damping: 18, delay }}
