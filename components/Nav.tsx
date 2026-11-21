@@ -11,7 +11,7 @@ export default function Nav() {
     <header className="fixed inset-x-0 top-0 z-50 border-b border-border bg-background/70 backdrop-blur-md">
       <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5">
         <a href="#top" className="whitespace-nowrap font-semibold tracking-tight">
-          Tanishq Kansal<span className="text-accent">.</span>
+          Tanishq Kansal
         </a>
         <ul className="flex items-center gap-4 text-sm text-muted sm:gap-7">
           {links.map(([label, href]) => (

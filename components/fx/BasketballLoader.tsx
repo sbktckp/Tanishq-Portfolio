@@ -86,7 +86,7 @@ export default function BasketballLoader() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            Tanishq Kansal<span className="text-accent">.</span>
+            Tanishq Kansal
           </motion.p>
           <p className="mt-1 font-mono text-xs uppercase tracking-[0.3em] text-muted">
             Loading portfolio
