@@ -3,23 +3,26 @@ import Reveal from "./motion/Reveal";
 
 export default function Section({
   id,
+  num,
   title,
-  className = "",
   children,
 }: {
   id: string;
+  num: string;
   title: string;
-  className?: string;
   children: ReactNode;
 }) {
   return (
-    <section id={id} className={`border-t border-line ${className}`}>
-      <div className="mx-auto grid max-w-6xl gap-10 px-5 py-16 sm:py-24 lg:grid-cols-[15rem_1fr] lg:gap-16">
-        <Reveal className="self-start">
-          <h2 className="text-2xl font-semibold tracking-tight">
-            <span aria-hidden className="rule mb-4 block h-0.5 w-8 bg-rose" />
+    <section id={id}>
+      <div className="mx-auto grid max-w-6xl gap-10 px-5 py-20 sm:py-32 lg:grid-cols-[17rem_1fr] lg:gap-14">
+        <Reveal className="self-start lg:sticky lg:top-28">
+          <p aria-hidden className="text-outline text-8xl font-extrabold leading-none tracking-tighter">
+            {num}
+          </p>
+          <h2 className="text-gradient mt-3 pb-1 text-4xl font-bold leading-[1.05] tracking-tight sm:text-5xl">
             {title}
           </h2>
+          <span aria-hidden className="rule mt-5 block h-1 w-16 rounded-full bg-rose" />
         </Reveal>
         <div className="min-w-0">{children}</div>
       </div>

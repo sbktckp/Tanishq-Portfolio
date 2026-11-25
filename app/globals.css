@@ -2,12 +2,12 @@
 
 /* Dark wine theme */
 :root {
-  --night: #14050a;
+  --night: #12040a;
   --surface: #230a13;
   --ink: #f8edf0;
-  --muted: #c9aab4;
-  --line: rgba(248, 237, 240, 0.13);
-  --accent: #9d1c42;
+  --muted: #ccadb7;
+  --line: rgba(248, 237, 240, 0.12);
+  --accent: #98183f;
   --rose: #ee8aa4;
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -42,8 +42,8 @@ body {
 
 .backdrop {
   background:
-    radial-gradient(70% 55% at 82% 8%, rgba(157, 28, 66, 0.34), transparent 70%),
-    radial-gradient(60% 50% at 5% 95%, rgba(122, 18, 52, 0.3), transparent 70%);
+    radial-gradient(65% 55% at 85% 5%, rgba(157, 28, 66, 0.34), transparent 70%),
+    radial-gradient(60% 55% at 0% 100%, rgba(122, 18, 52, 0.3), transparent 70%);
 }
 
 ::selection {
@@ -56,12 +56,179 @@ body {
   outline-offset: 3px;
 }
 
+/* ---------- Type ---------- */
+
+.text-gradient {
+  background: linear-gradient(100deg, #f8edf0 35%, #ee8aa4 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.text-outline {
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(238, 138, 164, 0.5);
+}
+
+/* Hero name: letters settle into place once */
+.letter {
+  display: inline-block;
+  animation: settle 0.9s var(--ease-out-soft) calc(var(--i) * 45ms) backwards;
+}
+.letter-accent {
+  color: var(--rose);
+}
+@keyframes settle {
+  from {
+    opacity: 0;
+    translate: 0 0.35em;
+  }
+}
+
+/* With the 3D scene running, particles draw these words instead */
+[data-journey="on"] .act-word {
+  opacity: 0;
+}
+
+/* ---------- Surfaces ---------- */
+
+.glass {
+  position: relative;
+  isolation: isolate;
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  background: linear-gradient(150deg, rgba(48, 13, 27, 0.8), rgba(22, 6, 12, 0.74));
+  box-shadow: 0 24px 50px -34px rgba(0, 0, 0, 0.8);
+}
+@media (min-width: 768px) {
+  .glass {
+    backdrop-filter: blur(10px);
+  }
+}
+
+/* A faint light under the cursor */
+.glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s;
+  background: radial-gradient(
+    24rem circle at var(--mx, 50%) var(--my, 50%),
+    rgba(238, 138, 164, 0.11),
+    transparent 60%
+  );
+}
+.glass:hover::before {
+  opacity: 1;
+}
+
+.tilt {
+  transform: perspective(1000px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition:
+    transform 0.3s ease-out,
+    border-color 0.35s;
+}
+.tilt:hover {
+  border-color: rgba(238, 138, 164, 0.4);
+}
+
+.chip {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(18, 4, 10, 0.55);
+  padding: 0.4rem 0.85rem;
+  font-size: 0.8125rem;
+  color: var(--muted);
+  transition:
+    border-color 0.25s,
+    color 0.25s;
+}
+.chip:hover {
+  border-color: var(--rose);
+  color: var(--ink);
+}
+
+.btn-glow,
+.btn-ghost {
+  display: inline-block;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  transition:
+    translate 0.3s var(--ease-out-soft),
+    box-shadow 0.3s,
+    border-color 0.3s;
+}
+.btn-glow {
+  background: var(--accent);
+  color: #fff;
+}
+.btn-glow:hover {
+  translate: 0 -2px;
+  box-shadow: 0 12px 28px -12px rgba(238, 138, 164, 0.6);
+}
+.btn-ghost {
+  border-color: rgba(248, 237, 240, 0.25);
+  background: rgba(18, 4, 10, 0.55);
+}
+.btn-ghost:hover {
+  translate: 0 -2px;
+  border-color: var(--rose);
+}
+
+.photo-glow {
+  box-shadow:
+    0 30px 60px -24px rgba(0, 0, 0, 0.75),
+    0 0 60px -30px rgba(238, 138, 164, 0.5);
+}
+
+/* ---------- Timeline ---------- */
+
+.timeline::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0.4rem;
+  width: 1px;
+  background: linear-gradient(var(--rose), var(--accent) 70%, transparent);
+  transform-origin: top;
+}
+.timeline-dot {
+  position: absolute;
+  top: 2.25rem;
+  left: 0;
+  width: 0.85rem;
+  height: 0.85rem;
+  border: 2px solid var(--rose);
+  border-radius: 50%;
+  background: var(--night);
+}
+/* The line draws itself as you scroll, where the browser supports it */
+@supports (animation-timeline: view()) {
+  @keyframes draw {
+    from {
+      scale: 1 0;
+    }
+  }
+  .timeline::before {
+    animation-name: draw;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+    animation-timeline: view();
+    animation-range: entry 10% exit 60%;
+  }
+}
+
 /* ---------- Motion ---------- */
 
 /* Scroll reveal, driven by components/motion/Reveal.tsx */
 [data-reveal="hidden"] {
   opacity: 0;
-  translate: 0 1.25rem;
+  translate: 0 2rem;
 }
 [data-reveal="shown"] {
   transition:
@@ -77,7 +244,16 @@ body {
   scale: 0 1;
 }
 [data-reveal="shown"] .rule {
-  transition: scale 0.9s var(--ease-out-soft) 0.25s;
+  transition: scale 0.9s var(--ease-out-soft) 0.3s;
+}
+
+.marquee {
+  animation: slide 60s linear infinite;
+}
+@keyframes slide {
+  to {
+    transform: translateX(-50%);
+  }
 }
 
 /* Hero text and mobile menu entrance */
@@ -132,8 +308,14 @@ body {
     transition-delay: 0ms !important;
   }
   .rise,
-  .drop {
+  .drop,
+  .letter,
+  .marquee,
+  .timeline::before {
     animation: none;
+  }
+  .tilt {
+    transform: none;
   }
 }
 

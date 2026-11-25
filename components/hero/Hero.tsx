@@ -1,4 +1,5 @@
 import Image from "next/image";
+import type { CSSProperties } from "react";
 import BallSlot from "./BallSlot";
 import { profile } from "@/lib/data";
 
@@ -12,36 +13,54 @@ function Label({ children, className }: { children: string; className: string })
   );
 }
 
+/** The name, one letter at a time. */
+function BigName() {
+  const words = profile.name.split(" ");
+  return (
+    <h1
+      aria-label={profile.name}
+      className="mt-4 text-[clamp(3.5rem,min(9vw,14vh),7.5rem)] font-extrabold uppercase leading-[0.9] tracking-tighter"
+    >
+      {words.map((word, w) => (
+        <span key={word} aria-hidden className="block whitespace-nowrap">
+          {[...word].map((letter, i) => (
+            <span
+              key={i}
+              className={`letter ${w ? "letter-accent" : ""}`}
+              style={{ "--i": w * words[0].length + i } as CSSProperties}
+            >
+              {letter}
+            </span>
+          ))}
+        </span>
+      ))}
+    </h1>
+  );
+}
+
 export default function Hero() {
   return (
     <section
       id="hero"
-      className="mx-auto grid max-w-6xl gap-16 overflow-x-clip px-5 pb-24 pt-14 sm:pt-20 md:grid-cols-[1.15fr_1fr] md:items-center"
+      className="mx-auto grid min-h-[calc(100svh-4rem)] max-w-6xl content-center gap-16 overflow-x-clip px-5 pb-20 pt-8 md:grid-cols-[1.2fr_1fr] md:items-center"
     >
       <div>
-        <p className="rise text-xs font-medium uppercase tracking-[0.22em] text-rose">
+        <p className="rise inline-flex items-center gap-3 rounded-full border border-line bg-night/50 px-4 py-2 text-xs font-medium uppercase tracking-[0.22em] text-rose">
+          <span className="h-2 w-2 rounded-full bg-rose" />
           {profile.location}
         </p>
-        <h1 className="rise mt-5 text-5xl font-semibold leading-[1.05] tracking-tight [animation-delay:90ms] sm:text-7xl">
-          {profile.name}
-        </h1>
-        <p className="rise mt-6 max-w-xl text-xl leading-snug [animation-delay:180ms] sm:text-2xl">
+        <BigName />
+        <p className="rise mt-5 max-w-xl text-xl font-medium leading-snug [animation-delay:700ms] sm:text-2xl">
           {profile.headline}
         </p>
-        <p className="rise mt-4 max-w-lg leading-relaxed text-muted [animation-delay:270ms]">
+        <p className="rise mt-4 max-w-lg leading-relaxed text-muted [animation-delay:820ms]">
           {profile.intro}
         </p>
-        <div className="rise mt-9 flex flex-wrap gap-3 [animation-delay:360ms]">
-          <a
-            href="#contact"
-            className="rounded-md bg-accent px-6 py-3 text-sm font-medium text-ink transition duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent/40"
-          >
+        <div className="rise mt-7 flex flex-wrap gap-4 [animation-delay:940ms]">
+          <a href="#contact" className="btn-glow px-8 py-4 text-sm font-semibold">
             Get in touch
           </a>
-          <a
-            href="#experience"
-            className="rounded-md border border-line bg-night/40 px-6 py-3 text-sm font-medium transition duration-300 hover:-translate-y-0.5 hover:border-rose"
-          >
+          <a href="#experience" className="btn-ghost px-8 py-4 text-sm font-semibold">
             View experience
           </a>
         </div>
@@ -49,7 +68,7 @@ export default function Hero() {
 
       {/* The photo, labels and basketball stay still. */}
       <div className="relative mx-auto w-full max-w-sm">
-        <figure className="relative rotate-3 border border-line bg-surface p-3 shadow-2xl shadow-black/50">
+        <figure className="photo-glow relative rotate-3 border border-line bg-surface p-3">
           <Image
             src="/tanishq.jpg"
             alt="Tanishq Kansal"

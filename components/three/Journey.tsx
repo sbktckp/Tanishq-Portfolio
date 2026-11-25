@@ -1,44 +1,27 @@
 "use client";
 
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { useEffect, useMemo, useRef } from "react";
+import { Canvas, useFrame } from "@react-three/fiber";
+import { useEffect, useMemo, useRef, type RefObject } from "react";
 import * as THREE from "three";
-import { buildShape, mulberry32, type ShapeName } from "./formations";
+import { buildShape, buildText, mulberry32 } from "./formations";
+import { SCENES } from "./scenes";
+import { fragmentShader, vertexShader } from "./shaders";
 
-/**
- * One scene per page section, in page order. `x` is the horizontal position as a
- * fraction of the screen width; `glow` is how bright the particles are there.
- */
-const SCENES: { id: string; shape: ShapeName; x: number; glow: number }[] = [
-  { id: "hero", shape: "sphere", x: 0.24, glow: 0.75 },
-  { id: "figures", shape: "wave", x: 0, glow: 0.55 },
-  { id: "about", shape: "helix", x: 0.36, glow: 0.6 },
-  { id: "roles", shape: "lattice", x: -0.34, glow: 0.45 },
-  { id: "experience", shape: "spiral", x: -0.32, glow: 0.5 },
-  { id: "expertise", shape: "atom", x: -0.33, glow: 0.55 },
-  { id: "achievements", shape: "knot", x: -0.34, glow: 0.55 },
-  { id: "education", shape: "helix", x: 0.36, glow: 0.5 },
-  { id: "contact", shape: "ring", x: 0.25, glow: 0.8 },
-];
-
-const PALETTE = ["#ff8fab", "#d6355f", "#a3143c", "#f4d3da"];
+const PALETTE = ["#e8668a", "#c93a66", "#a81646", "#8a1238", "#f0b6c4"];
 
 const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
 const smooth = (v: number) => v * v * (3 - 2 * v);
+const lerp = THREE.MathUtils.lerp;
 
-/** Soft round dot used for every particle. */
-function makeSprite() {
-  const c = document.createElement("canvas");
-  c.width = c.height = 64;
-  const g = c.getContext("2d")!;
-  const grad = g.createRadialGradient(32, 32, 0, 32, 32, 32);
-  grad.addColorStop(0, "rgba(255,255,255,1)");
-  grad.addColorStop(0.35, "rgba(255,255,255,0.75)");
-  grad.addColorStop(1, "rgba(255,255,255,0)");
-  g.fillStyle = grad;
-  g.fillRect(0, 0, 64, 64);
-  return new THREE.CanvasTexture(c);
-}
+/** Shared, per-frame state of the journey. */
+type Ride = {
+  scene: number;
+  speed: number;
+  travel: number;
+  x: number;
+  y: number;
+  mouse: boolean;
+};
 
 /** Scroll position expressed as a scene number, e.g. 2.5 is halfway from scene 2 to 3. */
 function sceneAt(tops: number[]) {
@@ -47,34 +30,36 @@ function sceneAt(tops: number[]) {
   const maxY = document.documentElement.scrollHeight - h;
   let scene = 0;
   for (let i = 1; i < tops.length; i++) {
-    // The morph runs while the next section climbs the screen.
+    // The change runs while the next section climbs the screen.
     const start = Math.min(tops[i] - h * 0.85, maxY - h * 0.5);
-    scene += clamp01((y - Math.max(0, start)) / (h * 0.6));
+    scene += clamp01((y - Math.max(0, start)) / (h * 0.65));
   }
   return scene;
 }
 
-function Particles({ count, still }: { count: number; still: boolean }) {
-  const group = useRef<THREE.Group>(null);
-  const points = useRef<THREE.Points>(null);
-  const tops = useRef<number[]>([]);
-  const current = useRef<number | null>(null);
-  const pointer = useRef({ x: 0, y: 0 });
-  const width = useThree((s) => s.viewport.width);
+/** Eases the shared state toward this frame's scroll and pointer. */
+function steer(
+  r: Ride,
+  dt: number,
+  moved: number,
+  scene: number,
+  pointer: { x: number; y: number; mouse: boolean },
+) {
+  const speed = Math.min(1, moved / (dt * 3200));
+  r.speed = lerp(r.speed, speed, 1 - Math.exp(-dt * (speed > r.speed ? 9 : 2.5)));
+  r.travel += dt * (0.5 + r.speed * 9);
+  r.scene = lerp(r.scene, scene, 1 - Math.exp(-dt * 4));
+  r.x = lerp(r.x, pointer.x, 1 - Math.exp(-dt * 5));
+  r.y = lerp(r.y, pointer.y, 1 - Math.exp(-dt * 5));
+  r.mouse = pointer.mouse;
+  return r;
+}
 
-  const { shapes, colors, delays, start, sprite } = useMemo(() => {
-    const rnd = mulberry32(5);
-    const colors = new Float32Array(count * 3);
-    const delays = new Float32Array(count);
-    const color = new THREE.Color();
-    for (let i = 0; i < count; i++) {
-      color.set(PALETTE[Math.floor(rnd() * PALETTE.length)]);
-      color.toArray(colors, i * 3);
-      delays[i] = rnd();
-    }
-    const shapes = SCENES.map((s) => buildShape(s.shape, count));
-    return { shapes, colors, delays, start: shapes[0].slice(), sprite: makeSprite() };
-  }, [count]);
+/** Reads scroll and pointer once per frame and moves the camera. */
+function Pilot({ ride }: { ride: RefObject<Ride> }) {
+  const tops = useRef<number[]>([]);
+  const lastY = useRef<number | null>(null);
+  const pointer = useRef({ x: 0, y: 0, mouse: false });
 
   useEffect(() => {
     const measure = () => {
@@ -88,124 +73,326 @@ function Particles({ count, still }: { count: number; still: boolean }) {
     ro.observe(document.body);
 
     const move = (e: PointerEvent) => {
-      if (e.pointerType !== "mouse") return;
-      pointer.current.x = e.clientX / window.innerWidth - 0.5;
-      pointer.current.y = e.clientY / window.innerHeight - 0.5;
+      pointer.current = {
+        x: (e.clientX / window.innerWidth) * 2 - 1,
+        y: 1 - (e.clientY / window.innerHeight) * 2,
+        mouse: e.pointerType === "mouse",
+      };
     };
+    const leave = () => (pointer.current.mouse = false);
     window.addEventListener("pointermove", move, { passive: true });
+    document.documentElement.addEventListener("pointerleave", leave);
     return () => {
       ro.disconnect();
       window.removeEventListener("pointermove", move);
+      document.documentElement.removeEventListener("pointerleave", leave);
     };
   }, []);
 
-  useFrame(({ clock }, delta) => {
+  useFrame(({ camera }, delta) => {
+    const dt = Math.min(delta, 0.05);
+    const y = window.scrollY;
+    const moved = lastY.current === null ? 0 : Math.abs(y - lastY.current);
+    lastY.current = y;
+    const r = steer(ride.current, dt, moved, sceneAt(tops.current), pointer.current);
+
+    // The view widens a little as you speed up.
+    const cam = camera as THREE.PerspectiveCamera;
+    cam.fov = 45 + r.speed * 6;
+    cam.position.x = r.x * 0.45;
+    cam.position.y = r.y * 0.3;
+    cam.lookAt(0, 0, 0);
+    cam.updateProjectionMatrix();
+  });
+
+  return null;
+}
+
+function Particles({ count, ride }: { count: number; ride: RefObject<Ride> }) {
+  const group = useRef<THREE.Group>(null);
+  const points = useRef<THREE.Points>(null);
+  const material = useRef<THREE.ShaderMaterial>(null);
+  const cage = useRef<THREE.Group>(null);
+  const lettering = useRef<THREE.Group>(null);
+  const segment = useRef(-1);
+  const born = useRef<number | null>(null);
+
+  const { shapes, words, geometry, uniforms, cages } = useMemo(() => {
+    const font = getComputedStyle(document.body).fontFamily;
+    const words: { scene: number; texture: THREE.CanvasTexture }[] = [];
+    const shapes = SCENES.map((s, scene) => {
+      if (typeof s.shape === "string") {
+        return new THREE.BufferAttribute(buildShape(s.shape, count), 3);
+      }
+      const { points, canvas } = buildText(s.shape.text, count, font);
+      const texture = new THREE.CanvasTexture(canvas);
+      texture.colorSpace = THREE.SRGBColorSpace;
+      texture.anisotropy = 8;
+      words.push({ scene, texture });
+      return new THREE.BufferAttribute(points, 3);
+    });
+
+    const rnd = mulberry32(5);
+    const seed = new Float32Array(count * 4);
+    const tint = new Float32Array(count * 3);
+    const color = new THREE.Color();
+    for (let i = 0; i < count; i++) {
+      seed.set([rnd(), rnd(), rnd(), rnd()], i * 4);
+      color.set(PALETTE[Math.floor(rnd() * PALETTE.length)]).toArray(tint, i * 3);
+    }
+
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute("position", shapes[0]);
+    geometry.setAttribute("target", shapes[1]);
+    geometry.setAttribute("seed", new THREE.BufferAttribute(seed, 4));
+    geometry.setAttribute("tint", new THREE.BufferAttribute(tint, 3));
+
+    const uniforms = {
+      uMix: { value: 0 },
+      uTime: { value: 0 },
+      uIntro: { value: 0 },
+      uSpeed: { value: 0 },
+      uSize: { value: 3.6 },
+      uOpacity: { value: 1 },
+      uPixelRatio: { value: 1 },
+      uAspect: { value: 1 },
+      uMouse: { value: new THREE.Vector2(9, 9) },
+    };
+
+    const cages = [4.1, 4.7].map((radius, i) => {
+      const solid = new THREE.IcosahedronGeometry(radius, i);
+      const edges = new THREE.EdgesGeometry(solid);
+      solid.dispose();
+      return edges;
+    });
+
+    return { shapes, words, geometry, uniforms, cages };
+  }, [count]);
+
+  useEffect(() => {
+    // Tells the page that the particles are drawing the big words.
+    document.documentElement.dataset.journey = "on";
+    return () => {
+      delete document.documentElement.dataset.journey;
+      geometry.dispose();
+      cages.forEach((c) => c.dispose());
+      words.forEach((w) => w.texture.dispose());
+    };
+  }, [geometry, cages, words]);
+
+  useFrame(({ clock, viewport, gl }) => {
     const g = group.current;
     const p = points.current;
-    if (!g || !p) return;
-    const dt = Math.min(delta, 0.05);
+    const m = material.current;
+    if (!g || !p || !m) return;
+    const r = ride.current;
+    const t = clock.elapsedTime;
+    born.current ??= t;
 
-    const target = still ? 0 : sceneAt(tops.current);
-    const first = current.current === null;
-    const scene = first
-      ? target
-      : current.current! + (target - current.current!) * (1 - Math.exp(-dt * 3.5));
-    current.current = scene;
-
-    const a = Math.min(SCENES.length - 1, Math.floor(scene));
-    const b = Math.min(SCENES.length - 1, a + 1);
-    const f = scene - a;
-
-    const from = shapes[a];
-    const to = shapes[b];
-    const attr = p.geometry.attributes.position as THREE.BufferAttribute;
-    const pos = attr.array as Float32Array;
-    const t = still ? 0 : clock.elapsedTime;
-    for (let i = 0; i < count; i++) {
-      // Particles set off at slightly different moments, which reads as a flow.
-      const k = smooth(clamp01((f - delays[i] * 0.35) / 0.65));
-      const drift = Math.sin(t * 0.7 + delays[i] * 40) * 0.035;
-      for (let j = i * 3; j < i * 3 + 3; j++) pos[j] = from[j] + (to[j] - from[j]) * k + drift;
+    const last = SCENES.length - 1;
+    const a = Math.min(last - 1, Math.floor(r.scene));
+    const f = clamp01(r.scene - a);
+    if (segment.current !== a) {
+      segment.current = a;
+      p.geometry.setAttribute("position", shapes[a]);
+      p.geometry.setAttribute("target", shapes[a + 1]);
     }
-    attr.needsUpdate = true;
 
-    const narrow = width < 8;
-    const mix = smooth(f);
-    const x = narrow ? 0 : (SCENES[a].x + (SCENES[b].x - SCENES[a].x) * mix) * width;
-    const glow = SCENES[a].glow + (SCENES[b].glow - SCENES[a].glow) * mix;
-    (p.material as THREE.PointsMaterial).opacity = glow * (still ? 0.45 : narrow ? 0.55 : 1);
+    const from = SCENES[a];
+    const to = SCENES[a + 1];
+    const k = smooth(f);
+    const narrow = viewport.aspect < 0.9;
+    const word = lerp(from.spin, to.spin, k);
 
-    g.position.x = x;
-    g.scale.setScalar(narrow ? 0.68 : 1);
-    // A gentle sway, so flat shapes such as the ring never turn edge-on.
-    g.rotation.y = Math.sin(t * 0.14) * 0.55 + scene * 0.12 + pointer.current.x * 0.25;
-    g.rotation.x = Math.sin(t * 0.11) * 0.08 + pointer.current.y * 0.15;
+    const u = m.uniforms;
+    u.uMix.value = f;
+    u.uTime.value = t;
+    u.uIntro.value = smooth(clamp01((t - born.current) / 2.4));
+    u.uSpeed.value = r.speed;
+    u.uPixelRatio.value = gl.getPixelRatio();
+    u.uAspect.value = viewport.aspect;
+    u.uMouse.value.set(r.mouse ? r.x : 9, r.mouse ? r.y : 9);
+    u.uSize.value = narrow ? 2.8 : lerp(3.9, 3.4, word);
+    // Words stay bright on phones; background shapes dim so text reads clearly.
+    u.uOpacity.value = lerp(from.glow, to.glow, k) * (narrow ? lerp(1, 0.45, word) : lerp(1.15, 0.8, word));
+
+    // Once the particles have gathered, the solid word fades in behind them.
+    lettering.current?.children.forEach((child, i) => {
+      const away = Math.abs(r.scene - words[i].scene);
+      const material = (child as THREE.Mesh).material as THREE.MeshBasicMaterial;
+      material.opacity = smooth(clamp01((0.55 - away) / 0.4)) * u.uIntro.value;
+      child.visible = material.opacity > 0.001;
+    });
+
+    // Fit words (ten units wide) inside any screen.
+    const fit = (s: (typeof SCENES)[number]) => {
+      if (typeof s.shape !== "string") return Math.min(s.size, (viewport.width * 0.9) / 10);
+      return narrow ? 0.7 : s.size;
+    };
+    g.scale.setScalar(lerp(fit(from), fit(to), k));
+    g.position.x = narrow ? 0 : lerp(from.x, to.x, k) * viewport.width;
+    g.rotation.y = (Math.sin(t * 0.16) * 0.7 + r.scene * 0.18) * word + r.x * 0.22;
+    g.rotation.x = Math.sin(t * 0.12) * 0.12 * word - r.y * 0.14;
+
+    if (cage.current) {
+      cage.current.rotation.set(t * 0.09, t * 0.13 + r.travel * 0.02, 0);
+      cage.current.scale.setScalar(0.92 + Math.sin(f * Math.PI) * 0.25);
+      cage.current.children.forEach((child, i) => {
+        const line = (child as THREE.LineSegments).material as THREE.LineBasicMaterial;
+        line.opacity = word * (i ? 0.035 : 0.08) * u.uIntro.value * (narrow ? 0.6 : 1);
+      });
+    }
   });
 
   return (
     <group ref={group}>
-      <points ref={points} frustumCulled={false}>
-        <bufferGeometry>
-          <bufferAttribute attach="attributes-position" args={[start, 3]} />
-          <bufferAttribute attach="attributes-color" args={[colors, 3]} />
-        </bufferGeometry>
-        <pointsMaterial
-          map={sprite}
-          size={0.075}
-          sizeAttenuation
-          vertexColors
+      <group ref={lettering}>
+        {words.map((w) => (
+          <mesh key={w.scene} position={[0, 0, -0.05]} renderOrder={-1} visible={false}>
+            <planeGeometry args={[10, 3]} />
+            <meshBasicMaterial
+              map={w.texture}
+              transparent
+              opacity={0}
+              depthWrite={false}
+              toneMapped={false}
+            />
+          </mesh>
+        ))}
+      </group>
+      <points ref={points} geometry={geometry} frustumCulled={false}>
+        <shaderMaterial
+          ref={material}
+          uniforms={uniforms}
+          vertexShader={vertexShader}
+          fragmentShader={fragmentShader}
           transparent
           depthWrite={false}
           blending={THREE.AdditiveBlending}
         />
       </points>
+      <group ref={cage}>
+        {cages.map((geo, i) => (
+          <lineSegments key={i} geometry={geo}>
+            <lineBasicMaterial
+              color={i ? "#ff8fab" : "#e0245e"}
+              transparent
+              opacity={0}
+              depthWrite={false}
+              blending={THREE.AdditiveBlending}
+            />
+          </lineSegments>
+        ))}
+      </group>
     </group>
   );
 }
 
-/** Faint distant dust that gives the scene its depth. */
-function Dust({ still }: { still: boolean }) {
-  const ref = useRef<THREE.Points>(null);
-  const positions = useMemo(() => {
-    const rnd = mulberry32(29);
-    const out = new Float32Array(420 * 3);
-    for (let i = 0; i < out.length; i += 3) {
-      out.set([(rnd() - 0.5) * 30, (rnd() - 0.5) * 18, -3 - rnd() * 10], i);
-    }
-    return out;
-  }, []);
+const DEPTH = 40;
 
-  useFrame(({ clock }) => {
-    if (!ref.current || still) return;
-    // The dust slides up as the page scrolls, like travelling past it.
-    ref.current.position.y = Math.min(4, window.scrollY * 0.0006);
-    ref.current.rotation.z = Math.sin(clock.elapsedTime * 0.05) * 0.05;
+/** Distant stars drifting past; they stretch slightly as you scroll. */
+function Warp({ count, ride }: { count: number; ride: RefObject<Ride> }) {
+  const ref = useRef<THREE.LineSegments>(null);
+  const { stars, geometry } = useMemo(() => {
+    const rnd = mulberry32(29);
+    const stars = Array.from({ length: count }, () => {
+      const a = rnd() * Math.PI * 2;
+      const radius = 2.5 + rnd() * 14;
+      return [Math.cos(a) * radius, Math.sin(a) * radius * 0.7, rnd() * DEPTH] as const;
+    });
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute("position", new THREE.BufferAttribute(new Float32Array(count * 6), 3));
+    return { stars, geometry };
+  }, [count]);
+
+  useEffect(() => () => geometry.dispose(), [geometry]);
+
+  useFrame(() => {
+    const line = ref.current;
+    if (!line) return;
+    const r = ride.current;
+    const attr = line.geometry.attributes.position as THREE.BufferAttribute;
+    const pos = attr.array as Float32Array;
+    const length = 0.05 + r.speed * 1.4;
+    stars.forEach(([x, y, offset], i) => {
+      const z = ((offset + r.travel) % DEPTH) - DEPTH + 9;
+      pos.set([x, y, z, x, y, z - length], i * 6);
+    });
+    attr.needsUpdate = true;
+    (line.material as THREE.LineBasicMaterial).opacity = 0.28 + r.speed * 0.22;
   });
 
   return (
-    <points ref={ref}>
-      <bufferGeometry>
-        <bufferAttribute attach="attributes-position" args={[positions, 3]} />
-      </bufferGeometry>
-      <pointsMaterial color="#e8849d" size={0.04} transparent opacity={0.35} depthWrite={false} />
-    </points>
+    <lineSegments ref={ref} geometry={geometry} frustumCulled={false}>
+      <lineBasicMaterial
+        color="#ff9db5"
+        transparent
+        depthWrite={false}
+        blending={THREE.AdditiveBlending}
+      />
+    </lineSegments>
+  );
+}
+
+const RINGS = 14;
+
+/** A tunnel of hexagons that you fly through. */
+function Tunnel({ ride }: { ride: RefObject<Ride> }) {
+  const group = useRef<THREE.Group>(null);
+  const geometry = useMemo(() => {
+    const pts = Array.from({ length: 6 }, (_, i) => {
+      const a = (i / 6) * Math.PI * 2;
+      return new THREE.Vector3(Math.cos(a) * 9, Math.sin(a) * 9, 0);
+    });
+    return new THREE.BufferGeometry().setFromPoints(pts);
+  }, []);
+
+  useEffect(() => () => geometry.dispose(), [geometry]);
+
+  useFrame(() => {
+    const r = ride.current;
+    group.current?.children.forEach((ring, i) => {
+      const along = ((i * (DEPTH / RINGS) + r.travel * 0.55) % DEPTH) / DEPTH;
+      ring.position.z = along * DEPTH - DEPTH + 6;
+      ring.rotation.z = i * 0.16 + r.scene * 0.5 + r.travel * 0.012;
+      const material = (ring as THREE.LineLoop).material as THREE.LineBasicMaterial;
+      // Fade in from the distance and out before reaching the reader.
+      material.opacity = Math.sin(along * Math.PI) * (0.07 + r.speed * 0.1);
+    });
+  });
+
+  return (
+    <group ref={group}>
+      {Array.from({ length: RINGS }, (_, i) => (
+        <lineLoop key={i} geometry={geometry}>
+          <lineBasicMaterial
+            color="#d6245a"
+            transparent
+            opacity={0}
+            depthWrite={false}
+            blending={THREE.AdditiveBlending}
+          />
+        </lineLoop>
+      ))}
+    </group>
   );
 }
 
 export default function Journey() {
+  const ride = useRef<Ride>({ scene: 0, speed: 0, travel: 0, x: 0, y: 0, mouse: false });
   // Loaded in the browser only, so window is available here.
-  const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const count = window.innerWidth < 768 ? 1600 : 3200;
+  const phone = window.innerWidth < 768;
 
   return (
     <Canvas
-      frameloop={still ? "demand" : "always"}
       dpr={[1, 1.5]}
       camera={{ position: [0, 0, 10], fov: 45 }}
       gl={{ antialias: false, alpha: true }}
     >
-      <Particles count={count} still={still} />
-      <Dust still={still} />
+      <Pilot ride={ride} />
+      <Tunnel ride={ride} />
+      <Warp count={phone ? 140 : 320} ride={ride} />
+      <Particles count={phone ? 5000 : 12000} ride={ride} />
     </Canvas>
   );
 }

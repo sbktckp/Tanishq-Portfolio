@@ -110,7 +110,19 @@ const ring: Shape = (_i, _n, rnd) => {
   return [Math.cos(a) * r, Math.sin(a) * r, Math.sin(b) * tube];
 };
 
-const SHAPES = { sphere, wave, helix, lattice, spiral, atom, knot, ring };
+/** Funnel of particles winding into the distance */
+const vortex: Shape = (i, _n, rnd) => {
+  const t = rnd();
+  const a = t * TAU * 5 + ((i % 5) * TAU) / 5;
+  const r = 0.35 + t * t * 3;
+  return [
+    Math.cos(a) * r + jitter(rnd, 0.2),
+    (t - 0.5) * 6.4,
+    Math.sin(a) * r + jitter(rnd, 0.2),
+  ];
+};
+
+const SHAPES = { sphere, wave, helix, lattice, spiral, atom, knot, ring, vortex };
 
 export type ShapeName = keyof typeof SHAPES;
 
@@ -119,4 +131,55 @@ export function buildShape(name: ShapeName, count: number) {
   const out = new Float32Array(count * 3);
   for (let i = 0; i < count; i++) out.set(SHAPES[name](i, count, rnd), i * 3);
   return out;
+}
+
+/**
+ * A word ten units wide: the particles that spell it, and the canvas it was drawn
+ * on, so the same lettering can sit solid behind them. Browser only.
+ */
+export function buildText(text: string, count: number, font: string) {
+  const w = 1200;
+  const h = 360;
+  const c = document.createElement("canvas");
+  c.width = w;
+  c.height = h;
+  const g = c.getContext("2d", { willReadFrequently: true })!;
+  g.font = `800 260px ${font}`;
+  const px = Math.min(260, (260 * (w - 40)) / g.measureText(text).width);
+  g.font = `800 ${px}px ${font}`;
+  g.textAlign = "center";
+  g.textBaseline = "middle";
+  const fill = g.createLinearGradient(0, h / 2 - px / 2, 0, h / 2 + px / 2);
+  fill.addColorStop(0, "#f58aa8");
+  fill.addColorStop(1, "#c4285a");
+  g.fillStyle = fill;
+  g.fillText(text, w / 2, h / 2);
+
+  const { data } = g.getImageData(0, 0, w, h);
+  const filled: number[] = [];
+  for (let y = 0; y < h; y += 2) {
+    for (let x = 0; x < w; x += 2) {
+      if (data[(y * w + x) * 4 + 3] > 140) filled.push(x, y);
+    }
+  }
+
+  const rnd = mulberry32(text.length * 131 + 7);
+  const out = new Float32Array(count * 3);
+  for (let i = 0; i < count; i++) {
+    // A few strays stay loose around the word to give it depth.
+    if (!filled.length || rnd() < 0.07) {
+      out.set([jitter(rnd, 15), jitter(rnd, 8), jitter(rnd, 7)], i * 3);
+      continue;
+    }
+    const k = Math.floor(rnd() * (filled.length / 2)) * 2;
+    out.set(
+      [
+        ((filled[k] + jitter(rnd, 2) - w / 2) / w) * 10,
+        (-(filled[k + 1] + jitter(rnd, 2) - h / 2) / w) * 10,
+        jitter(rnd, 0.35),
+      ],
+      i * 3,
+    );
+  }
+  return { points: out, canvas: c };
 }
