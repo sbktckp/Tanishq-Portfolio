@@ -16,6 +16,8 @@ import {
   achievements,
   education,
   whatsappLink,
+  calendarLink,
+  resumeFile,
   type Role,
 } from "@/lib/data";
 
@@ -113,7 +115,7 @@ export default function Home() {
                       rel="noreferrer"
                       className="btn-ghost mt-7 self-start px-5 py-2.5 text-sm font-semibold"
                     >
-                      {r.href.replace("https://", "")} &#8599;
+                      {r.linkLabel ?? r.href.replace("https://", "")} &#8599;
                     </a>
                   )}
                 </TiltCard>
@@ -154,10 +156,20 @@ export default function Home() {
         <Section id="achievements" num="05" title="Achieve&shy;ments">
           <ul className="grid gap-6 md:grid-cols-2">
             {achievements.map((a, i) => (
-              <Reveal as="li" key={a} delay={i * 140}>
-                <TiltCard tilt={2} className="h-full p-7 text-lg leading-relaxed sm:p-9">
+              <Reveal as="li" key={a.href} delay={i * 140}>
+                <TiltCard tilt={2} className="flex h-full flex-col p-7 text-lg leading-relaxed sm:p-9">
                   <span aria-hidden className="mb-5 block h-0.5 w-10 bg-rose" />
-                  {a}
+                  <p>{a.text}</p>
+                  <div className="mt-auto pt-7">
+                    <a
+                      href={a.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="btn-ghost px-5 py-2.5 text-sm font-semibold"
+                    >
+                      {a.linkLabel} &#8599;
+                    </a>
+                  </div>
                 </TiltCard>
               </Reveal>
             ))}
@@ -192,18 +204,29 @@ export default function Home() {
             </Reveal>
             <Reveal delay={150} className="mt-10 flex flex-wrap gap-4">
               <a
+                href={whatsappLink}
+                target="_blank"
+                rel="noreferrer"
+                className="btn-glow px-8 py-4 text-sm font-semibold sm:text-base"
+              >
+                Message on WhatsApp
+              </a>
+              <a
                 href={`mailto:${profile.email}`}
-                className="btn-glow break-all px-8 py-4 text-sm font-semibold sm:text-base"
+                className="btn-ghost break-all px-8 py-4 text-sm font-semibold sm:text-base"
               >
                 {profile.email}
               </a>
               <a
-                href={whatsappLink}
+                href={calendarLink}
                 target="_blank"
                 rel="noreferrer"
                 className="btn-ghost px-8 py-4 text-sm font-semibold sm:text-base"
               >
-                Message on WhatsApp
+                Book on Google Calendar
+              </a>
+              <a href={resumeFile} download className="btn-ghost px-8 py-4 text-sm font-semibold sm:text-base">
+                Download resume
               </a>
             </Reveal>
             <div className="mt-16 flex flex-wrap justify-between gap-3 border-t border-line pt-6 text-sm text-muted">

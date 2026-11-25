@@ -1,7 +1,7 @@
 import Image from "next/image";
 import type { CSSProperties } from "react";
 import BallSlot from "./BallSlot";
-import { profile } from "@/lib/data";
+import { profile, resumeFile, whatsappLink } from "@/lib/data";
 
 function Label({ children, className }: { children: string; className: string }) {
   return (
@@ -57,8 +57,16 @@ export default function Hero() {
           {profile.intro}
         </p>
         <div className="rise mt-7 flex flex-wrap gap-4 [animation-delay:940ms]">
-          <a href="#contact" className="btn-glow px-8 py-4 text-sm font-semibold">
+          <a
+            href={whatsappLink}
+            target="_blank"
+            rel="noreferrer"
+            className="btn-glow px-8 py-4 text-sm font-semibold"
+          >
             Get in touch
+          </a>
+          <a href={resumeFile} download className="btn-ghost px-8 py-4 text-sm font-semibold">
+            Download resume
           </a>
           <a href="#experience" className="btn-ghost px-8 py-4 text-sm font-semibold">
             View experience

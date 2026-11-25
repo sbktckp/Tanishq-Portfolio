@@ -1,6 +1,6 @@
 export const profile = {
   name: "Tanishq Kansal",
-  email: "tanishq.kansal35@gmail.com",
+  email: "contact@tanishqk.in",
   location: "Delhi, India",
   headline: "Managing Director, AxiomPrep · Academic Content Head, Examlytics",
   intro:
@@ -18,6 +18,8 @@ export type Role = {
   org: string;
   period: string;
   href?: string;
+  /** Button text for the link; defaults to the address without https:// */
+  linkLabel?: string;
   points: string[];
 };
 
@@ -30,7 +32,7 @@ export const currentRoles: Role[] = [
     points: [
       "Lead AxiomPrep, an online platform for NEET and IIT-JEE aspirants built around science from first principles, driving its strategy, operations and growth.",
       "Manage the content-making team, tech team and NEET and IIT-JEE mentors, working closely with the Founder and CEO and the CTO.",
-      "Oversee a product offering of 50,000+ past-year questions from NTA, IIT JEE and NEET, practice tests, full syllabus tests, original quizzes and rank-focused analytics with leaderboards.",
+      "Oversee a product offering of practice tests, full syllabus tests, original quizzes and rank-focused analytics with leaderboards.",
       "Maintain academic quality through content validated and recommended by HODs of top institutes for structural accuracy and concept alignment.",
     ],
   },
@@ -41,6 +43,7 @@ export const currentRoles: Role[] = [
     href: "https://examlytics.in",
     points: [
       "Lead academic content operations and contribute to content development strategy.",
+      "50,000+ past-year questions from NTA, IIT JEE and NEET on Examlytics.",
       "Take ownership of academic deliverables, quality and content execution.",
       "Coordinate academic workflows and support the development of educational resources.",
       "Contribute to content planning, team collaboration and scalable academic processes.",
@@ -50,12 +53,16 @@ export const currentRoles: Role[] = [
     role: "Academic Content Strategist",
     org: "Study Voice by Amit Sir (IIT Bombay)",
     period: "Present",
+    href: "https://youtube.com/@studyvoiceteam",
+    linkLabel: "Study Voice on YouTube",
     points: ["Design academic content, notes and test series."],
   },
   {
     role: "Outreach",
     org: "Sukesh Academy (YouTube)",
     period: "Present",
+    href: "https://youtube.com/@sukeshacademy",
+    linkLabel: "Sukesh Academy on YouTube",
     points: ["Handle outreach for Sukesh Academy on YouTube."],
   },
 ];
@@ -149,7 +156,7 @@ export const experience: Role[] = [
 
 export const stats = [
   { value: "4,500", label: "NEET questions designed" },
-  { value: "50,000+", label: "Past-year questions on AxiomPrep" },
+  { value: "50,000+", label: "Past-year questions on Examlytics" },
   { value: "25", label: "Question paper sets" },
   { value: String(currentRoles.length + experience.length), label: "Roles across education" },
 ];
@@ -215,8 +222,17 @@ export const skills: { group: string; items: string[] }[] = [
 ];
 
 export const achievements = [
-  "Named among the top educators in the M.S. Chouhan NEET Book (latest 13th Edition) as a proofreader.",
-  "Part of the Physics Wallah Vijeta Series 2025–2026 launch event; the event video is available on the NCERT Wallah YouTube channel.",
+  {
+    text: "Named among the top educators in the M.S. Chouhan NEET Book (latest 13th Edition) as a proofreader.",
+    href: "https://www.instagram.com/reel/DNAJf95RYWp/",
+    linkLabel: "Watch the reel",
+  },
+  {
+    text: "Part of the Physics Wallah Vijeta Series 2025–2026 launch event; the event video is available on the NCERT Wallah YouTube channel.",
+    // Opens at the moment given in the shared link.
+    href: "https://www.youtube.com/live/mmKyrjChfSI?t=827",
+    linkLabel: "Watch the launch event",
+  },
 ];
 
 export const education = [
@@ -234,3 +250,12 @@ const whatsapp = {
 };
 
 export const whatsappLink = `https://wa.me/${whatsapp.number}?text=${encodeURIComponent(whatsapp.message)}`;
+
+/** Opens a new Google Calendar event with Tanishq already added as a guest. */
+export const calendarLink = `https://calendar.google.com/calendar/render?${new URLSearchParams({
+  action: "TEMPLATE",
+  text: `Meeting with ${profile.name}`,
+  add: profile.email,
+})}`;
+
+export const resumeFile = "/Tanishq_Kansal_Resume.pdf";

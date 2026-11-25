@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Logo from "./Logo";
+import { resumeFile, whatsappLink } from "@/lib/data";
 
 const links = [
   ["About", "#about"],
@@ -37,7 +38,9 @@ export default function Nav() {
             ))}
           </ul>
           <a
-            href="#contact"
+            href={whatsappLink}
+            target="_blank"
+            rel="noreferrer"
             className="hidden rounded-md bg-accent px-4 py-2 text-sm font-medium text-ink transition duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent/40 sm:inline-block"
           >
             Contact
@@ -58,13 +61,29 @@ export default function Nav() {
       </nav>
       {open && (
         <ul id="mobile-menu" className="drop border-t border-line bg-night px-5 py-2 lg:hidden">
-          {[...links, ["Contact", "#contact"] as const].map(([label, href]) => (
-            <li key={href} className="border-b border-line last:border-0">
+          {links.map(([label, href]) => (
+            <li key={href} className="border-b border-line">
               <a href={href} onClick={() => setOpen(false)} className="block py-3.5 text-base">
                 {label}
               </a>
             </li>
           ))}
+          <li className="border-b border-line">
+            <a href={resumeFile} download onClick={() => setOpen(false)} className="block py-3.5 text-base">
+              Download resume
+            </a>
+          </li>
+          <li>
+            <a
+              href={whatsappLink}
+              target="_blank"
+              rel="noreferrer"
+              onClick={() => setOpen(false)}
+              className="block py-3.5 text-base"
+            >
+              Contact on WhatsApp
+            </a>
+          </li>
         </ul>
       )}
       <div aria-hidden className="scroll-progress absolute inset-x-0 -bottom-px h-0.5 bg-rose" />
