@@ -1,26 +1,32 @@
 @import "tailwindcss";
 
-/* Neutral corporate palette with a single wine accent */
+/* Dark wine theme */
 :root {
-  --paper: #ffffff;
-  --mist: #f7f6f7;
-  --ink: #17141a;
-  --muted: #5f5a66;
-  --line: #e6e3e8;
-  --accent: #6e1d3a;
+  --night: #14050a;
+  --surface: #230a13;
+  --ink: #f8edf0;
+  --muted: #c9aab4;
+  --line: rgba(248, 237, 240, 0.13);
+  --accent: #9d1c42;
+  --rose: #ee8aa4;
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @theme inline {
-  --color-paper: var(--paper);
-  --color-mist: var(--mist);
+  --color-night: var(--night);
+  --color-surface: var(--surface);
   --color-ink: var(--ink);
   --color-muted: var(--muted);
   --color-line: var(--line);
   --color-accent: var(--accent);
+  --color-rose: var(--rose);
   --font-sans: var(--font-geist-sans);
 }
 
 html {
+  /* The page colour lives here so the 3D layer can sit between it and the content. */
+  background: var(--night);
+  color-scheme: dark;
   scroll-behavior: smooth;
   scroll-padding-top: 4rem;
   /* never let a wide child widen the layout viewport on phones */
@@ -28,27 +34,112 @@ html {
 }
 
 body {
-  background: var(--paper);
   color: var(--ink);
   font-family: var(--font-geist-sans), system-ui, sans-serif;
   overflow-x: clip;
   max-width: 100%;
 }
 
+.backdrop {
+  background:
+    radial-gradient(70% 55% at 82% 8%, rgba(157, 28, 66, 0.34), transparent 70%),
+    radial-gradient(60% 50% at 5% 95%, rgba(122, 18, 52, 0.3), transparent 70%);
+}
+
 ::selection {
   background: var(--accent);
-  color: var(--paper);
+  color: var(--ink);
 }
 
 :focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--rose);
   outline-offset: 3px;
 }
 
-#contact :focus-visible {
-  outline-color: var(--paper);
+/* ---------- Motion ---------- */
+
+/* Scroll reveal, driven by components/motion/Reveal.tsx */
+[data-reveal="hidden"] {
+  opacity: 0;
+  translate: 0 1.25rem;
+}
+[data-reveal="shown"] {
+  transition:
+    opacity 0.8s var(--ease-out-soft) var(--delay, 0ms),
+    translate 0.8s var(--ease-out-soft) var(--delay, 0ms);
+}
+
+/* Section accent line draws in with its heading */
+.rule {
+  transform-origin: left;
+}
+[data-reveal="hidden"] .rule {
+  scale: 0 1;
+}
+[data-reveal="shown"] .rule {
+  transition: scale 0.9s var(--ease-out-soft) 0.25s;
+}
+
+/* Hero text and mobile menu entrance */
+@keyframes rise {
+  from {
+    opacity: 0;
+    translate: 0 1rem;
+  }
+}
+.rise {
+  animation: rise 0.9s var(--ease-out-soft) backwards;
+}
+
+@keyframes drop {
+  from {
+    opacity: 0;
+    translate: 0 -0.5rem;
+  }
+}
+.drop {
+  animation: drop 0.35s var(--ease-out-soft) backwards;
+}
+
+/* Reading progress line under the header, where the browser supports it */
+.scroll-progress {
+  display: none;
+}
+@supports (animation-timeline: scroll()) {
+  @keyframes progress {
+    from {
+      scale: 0 1;
+    }
+  }
+  .scroll-progress {
+    display: block;
+    transform-origin: left;
+    animation-name: progress;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+    animation-timeline: scroll(root);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+  .rise,
+  .drop {
+    animation: none;
+  }
+}
+
+@media print {
+  [data-reveal] {
+    opacity: 1 !important;
+    translate: none !important;
+  }
 }

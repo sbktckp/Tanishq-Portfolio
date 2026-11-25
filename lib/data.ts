@@ -35,6 +35,18 @@ export const currentRoles: Role[] = [
     ],
   },
   {
+    role: "Academic Content Head",
+    org: "Examlytics",
+    period: "Present",
+    href: "https://examlytics.in",
+    points: [
+      "Lead academic content operations and contribute to content development strategy.",
+      "Take ownership of academic deliverables, quality and content execution.",
+      "Coordinate academic workflows and support the development of educational resources.",
+      "Contribute to content planning, team collaboration and scalable academic processes.",
+    ],
+  },
+  {
     role: "Academic Content Strategist",
     org: "Study Voice by Amit Sir (IIT Bombay)",
     period: "Present",
@@ -45,17 +57,6 @@ export const currentRoles: Role[] = [
     org: "Sukesh Academy (YouTube)",
     period: "Present",
     points: ["Handle outreach for Sukesh Academy on YouTube."],
-  },
-  {
-    role: "Academic Content Head",
-    org: "Examlytics",
-    period: "Present",
-    points: [
-      "Lead academic content operations and contribute to content development strategy.",
-      "Take ownership of academic deliverables, quality and content execution.",
-      "Coordinate academic workflows and support the development of educational resources.",
-      "Contribute to content planning, team collaboration and scalable academic processes.",
-    ],
   },
 ];
 

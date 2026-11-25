@@ -20,8 +20,8 @@ export default async function OpengraphImage() {
           alignItems: "center",
           justifyContent: "space-between",
           padding: "64px 80px",
-          background: "#ffffff",
-          color: "#17141a",
+          background: "linear-gradient(135deg, #14050a 0%, #3a0c1d 100%)",
+          color: "#f8edf0",
         }}
       >
         <div style={{ display: "flex", flexDirection: "column", maxWidth: 640 }}>
@@ -30,7 +30,7 @@ export default async function OpengraphImage() {
               display: "flex",
               fontSize: 22,
               letterSpacing: 6,
-              color: "#6e1d3a",
+              color: "#ee8aa4",
               textTransform: "uppercase",
             }}
           >
@@ -39,10 +39,10 @@ export default async function OpengraphImage() {
           <div style={{ display: "flex", fontSize: 84, fontWeight: 700, marginTop: 16, lineHeight: 1.05 }}>
             Tanishq Kansal
           </div>
-          <div style={{ display: "flex", fontSize: 29, color: "#5f5a66", marginTop: 20, whiteSpace: "nowrap" }}>
+          <div style={{ display: "flex", fontSize: 29, color: "#c9aab4", marginTop: 20, whiteSpace: "nowrap" }}>
             Managing Director, AxiomPrep
           </div>
-          <div style={{ display: "flex", fontSize: 26, marginTop: 36, color: "#17141a" }}>
+          <div style={{ display: "flex", fontSize: 26, marginTop: 36, color: "#f8edf0" }}>
             Examlytics · NEET &amp; IIT-JEE
           </div>
         </div>
@@ -50,7 +50,7 @@ export default async function OpengraphImage() {
           style={{
             display: "flex",
             padding: 12,
-            border: "1px solid #e6e3e8",
+            border: "1px solid rgba(248,237,240,0.2)",
           }}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}

@@ -4,7 +4,7 @@ import { LOGO_PATHS } from "@/components/Logo";
 export const size = { width: 512, height: 512 };
 export const contentType = "image/png";
 
-/** Favicon: the hand-drawn TK monogram in white on ink. */
+/** Favicon: the hand-drawn TK monogram in white on wine. */
 export default function Icon() {
   return new ImageResponse(
     (
@@ -15,7 +15,7 @@ export default function Icon() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#17141a",
+          background: "#9d1c42",
           borderRadius: 112,
         }}
       >
