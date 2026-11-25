@@ -4,7 +4,7 @@ import { LOGO_PATHS } from "@/components/Logo";
 export const size = { width: 512, height: 512 };
 export const contentType = "image/png";
 
-/** Favicon: the hand-drawn TK monogram in orange on black. */
+/** Favicon: the hand-drawn TK monogram in white on ink. */
 export default function Icon() {
   return new ImageResponse(
     (
@@ -15,13 +15,13 @@ export default function Icon() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#050407",
+          background: "#17141a",
           borderRadius: 112,
         }}
       >
         <svg width="380" height="352" viewBox="420 240 810 750" fill="none">
           {LOGO_PATHS.map((d) => (
-            <path key={d} d={d} stroke="#ff6a2e" strokeWidth="46" strokeLinecap="round" strokeLinejoin="round" />
+            <path key={d} d={d} stroke="#ffffff" strokeWidth="46" strokeLinecap="round" strokeLinejoin="round" />
           ))}
         </svg>
       </div>

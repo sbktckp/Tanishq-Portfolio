@@ -1,31 +1,25 @@
 import type { ReactNode } from "react";
-import Reveal from "./Reveal";
 
 export default function Section({
   id,
-  num,
   title,
+  className = "",
   children,
 }: {
   id: string;
-  num: string;
   title: string;
+  className?: string;
   children: ReactNode;
 }) {
   return (
-    <section id={id} className="mx-auto max-w-6xl px-5 py-16 sm:py-24">
-      <Reveal>
-        <div className="mb-12 flex items-end justify-between gap-6 border-b-2 border-ink pb-4">
-          <h2
-            className="font-display text-5xl font-extrabold tracking-tight sm:text-7xl"
-            style={{ fontVariationSettings: '"wdth" 78' }}
-          >
-            {title}
-          </h2>
-          <span className="pb-2 font-mono text-sm">({num})</span>
-        </div>
-      </Reveal>
-      {children}
+    <section id={id} className={`border-t border-line ${className}`}>
+      <div className="mx-auto grid max-w-6xl gap-10 px-5 py-16 sm:py-24 lg:grid-cols-[15rem_1fr] lg:gap-16">
+        <h2 className="self-start text-2xl font-semibold tracking-tight">
+          <span aria-hidden className="mb-4 block h-0.5 w-8 bg-accent" />
+          {title}
+        </h2>
+        <div className="min-w-0">{children}</div>
+      </div>
     </section>
   );
 }

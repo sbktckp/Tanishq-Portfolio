@@ -1,4 +1,4 @@
-/** Flat basketball illustration (used in the loader, marquee and as a no-WebGL fallback). */
+/** Flat basketball illustration, used when WebGL is unavailable. */
 export default function BasketballSvg({ className = "" }: { className?: string }) {
   return (
     <svg viewBox="0 0 100 100" className={className} aria-hidden>

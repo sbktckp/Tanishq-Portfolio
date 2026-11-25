@@ -14,12 +14,12 @@ export default function AppleIcon() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#050407",
+          background: "#17141a",
         }}
       >
         <svg width="134" height="124" viewBox="420 240 810 750" fill="none">
           {LOGO_PATHS.map((d) => (
-            <path key={d} d={d} stroke="#ff6a2e" strokeWidth="46" strokeLinecap="round" strokeLinejoin="round" />
+            <path key={d} d={d} stroke="#ffffff" strokeWidth="46" strokeLinecap="round" strokeLinejoin="round" />
           ))}
         </svg>
       </div>

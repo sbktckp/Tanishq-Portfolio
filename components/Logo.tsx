@@ -7,7 +7,7 @@ export const LOGO_PATHS = [
 
 export default function Logo({
   className = "",
-  color = "#ff6a2e",
+  color = "currentColor",
   strokeWidth = 30,
 }: {
   className?: string;

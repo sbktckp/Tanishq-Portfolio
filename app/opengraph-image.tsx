@@ -20,30 +20,17 @@ export default async function OpengraphImage() {
           alignItems: "center",
           justifyContent: "space-between",
           padding: "64px 80px",
-          background: "linear-gradient(135deg, #faf8f3 0%, #f4e6e3 100%)",
-          color: "#3b0d1f",
-          position: "relative",
+          background: "#ffffff",
+          color: "#17141a",
         }}
       >
-        <div
-          style={{
-            position: "absolute",
-            top: -140,
-            left: -140,
-            width: 420,
-            height: 420,
-            borderRadius: 9999,
-            background: "rgba(179,32,77,0.3)",
-            filter: "blur(80px)",
-          }}
-        />
         <div style={{ display: "flex", flexDirection: "column", maxWidth: 640 }}>
           <div
             style={{
               display: "flex",
               fontSize: 22,
               letterSpacing: 6,
-              color: "#b3204d",
+              color: "#6e1d3a",
               textTransform: "uppercase",
             }}
           >
@@ -52,19 +39,18 @@ export default async function OpengraphImage() {
           <div style={{ display: "flex", fontSize: 84, fontWeight: 700, marginTop: 16, lineHeight: 1.05 }}>
             Tanishq Kansal
           </div>
-          <div style={{ display: "flex", fontSize: 29, color: "#7a5a63", marginTop: 20, whiteSpace: "nowrap" }}>
+          <div style={{ display: "flex", fontSize: 29, color: "#5f5a66", marginTop: 20, whiteSpace: "nowrap" }}>
             Managing Director, AxiomPrep
           </div>
-          <div style={{ display: "flex", fontSize: 26, marginTop: 36, color: "#3b0d1f" }}>
+          <div style={{ display: "flex", fontSize: 26, marginTop: 36, color: "#17141a" }}>
             Examlytics · NEET &amp; IIT-JEE
           </div>
         </div>
         <div
           style={{
             display: "flex",
-            padding: 6,
-            borderRadius: 40,
-            background: "linear-gradient(135deg, #b3204d, #7a1f3d)",
+            padding: 12,
+            border: "1px solid #e6e3e8",
           }}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -73,7 +59,7 @@ export default async function OpengraphImage() {
             width={380}
             height={475}
             alt=""
-            style={{ borderRadius: 34, objectFit: "cover", objectPosition: "top" }}
+            style={{ objectFit: "cover", objectPosition: "top" }}
           />
         </div>
       </div>

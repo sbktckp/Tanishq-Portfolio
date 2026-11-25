@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useSyncExternalStore } from "react";
-import BasketballSvg from "../fx/BasketballSvg";
+import BasketballSvg from "./BasketballSvg";
 
 const HeroBall = dynamic(() => import("../three/HeroBall"), { ssr: false });
 
@@ -17,16 +17,11 @@ function webgl() {
 
 const subscribe = () => () => {};
 
-/** The interactive 3D basketball, with a static SVG fallback when WebGL is unavailable. */
+/** The still 3D basketball, with an SVG fallback when WebGL is unavailable. */
 export default function BallSlot({ className = "" }: { className?: string }) {
   const ok = useSyncExternalStore(subscribe, webgl, () => false);
   return (
-    <div
-      data-cursor="spin"
-      className={`${className}`}
-      style={{ touchAction: "pan-y" }}
-      aria-label="Basketball. Drag to spin, click to bounce."
-    >
+    <div className={className} aria-hidden>
       {ok ? <HeroBall /> : <BasketballSvg className="mx-auto mt-16 h-28 w-28" />}
     </div>
   );
